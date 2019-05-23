@@ -2,7 +2,35 @@
 
 [Project Introduction Link](http://wm5.nccu.edu.tw/base/10001/course/10021115/content/proj03/index.html)
 
+[Contest Link](https://aidea-web.tw/topic/b6abbf14-2d60-456c-8cbe-34fdfcd58967)
+
 please download [Processed Data](https://drive.google.com/file/d/1K4SnbYkp3dnGVqBqjZni7RFW7gN1gEeK/view) as `./data/url2content.json`
+
+
+### approachs
+
+### tools
+
+
+#### stopwords
+
+有些 stop words 可能會影響結果，如 `不`，應該會影響立場的分類。
+
+- [chinese stop words](https://github.com/goto456/stopwords)
+- [chinese stop words](https://www.ranks.nl/stopwords/chinese-stopwords)
+- [chinese stop words](https://countwordsfree.com/stopwords/chinese)
+- [chinese stop words](https://blog.csdn.net/shijiebei2009/article/details/39696571)
+- [中文 NLP 資源（內含 stopwords）](https://github.com/tomlinNTUB/Python-in-5-days/blob/master/10-2%20%E4%B8%AD%E6%96%87%E6%96%B7%E8%A9%9E-%E7%A7%BB%E9%99%A4%E5%81%9C%E7%94%A8%E8%A9%9E.md)
+
+#### Vector Space Model
+
+
+#### Language Model
+
+
+#### Support Vector Machine
+
+
 ### ideas
 
 - 新聞分類（如蘋果：總覽 熱門 要聞 娛樂 國際 財經 副刊 體育 地產 論壇與專欄）重爬 然後歸類。
@@ -11,7 +39,7 @@ please download [Processed Data](https://drive.google.com/file/d/1K4SnbYkp3dnGVq
 
 ### scripts
 
-- `extract domain.py`
+- `extract_domain.py`
    將 `NC_1.csv` URL 的 domain parse 出來，並 show 出 invalid URLs
 - `load_json.py`
    載入 `url2content.json` 的資料。
