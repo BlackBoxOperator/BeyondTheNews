@@ -3,7 +3,7 @@ Program : 新聞標題爬蟲程式
 Status  : 目前還在爬，估計要一到兩天才能爬完
 執行時間滿久的，應該可以想辦法優
 
-做了一些修正,改善request 時間過長導致程式崩潰的問題，但是title出現None
+做了一些修正,改善request 時間過長導致程式崩潰的問題，但是title出現None的機率會提高一些.
 """
 import urllib.request as urllib
 from bs4 import BeautifulSoup
