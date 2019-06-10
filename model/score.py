@@ -1,6 +1,8 @@
-import os, time, sys
-import json, jieba
+import time, jieba
 import numpy as np
+from corpus import initCorpus, makeVector
+from pprint import pprint
+from tqdm import *
 
 def twostage(occurence,collectionFrequency,contextSize,mu=2500,lam=0.8):
     """
@@ -39,29 +41,22 @@ def cosSim(v1,v2):
 def eucDis(v1,v2):
     return np.sqrt(np.power(v1-v2,2).sum())
 
-def load_json(jpath):
-    with open(jpath, encoding='utf-8') as json_file:
-        return json.load(json_file)
-
-DataDir = os.path.join("..", "DataMining")
-TitleJson = "AllTitle.json"
-TextTermJson = "TextTerm.json"
-TextListJson = "TextList.json"
-InvertIndexJson = "InvertIndex.json"
+def trimKeys(d):
+    return {k.strip(): d[k] for k in d}
 
 if __name__ == '__main__':
 
+    Title, TextTerm, TextList, InvertIndex = initCorpus()
 
-    print("loading json... ", end='')
-    sys.stdout.flush()
-    load = lambda fn: load_json(os.path.join(DataDir, fn))
-    jsons = [TitleJson, TextTermJson, TextListJson, InvertIndexJson]
-    TitleData, TextTermData, TextListData, InvertIndexData = map(load, jsons)
-    print('done')
+    InvertIndex = trimKeys(InvertIndex)
+
+    Terms, VecLen = makeVector(TextTerm)
+
     """
-    TitleData['news_056765'] -> 阿扁保外就醫 民進黨籲尊重人權 - 政治 - 旺報
-    TextTermData['news_056765'] -> {'針對': 1, '法務': 4, '法務部': 4,.......}
-    InvertIndexData['陳水扁'] -> ['news_067927' 'news_031420' 'news_014034' ...]
+    Title['news_056765'] -> 阿扁保外就醫 民進黨籲尊重人權 - 政治 - 旺報
+    TextTerm['news_056765'] -> {'針對': 1, '法務': 4, '法務部': 4,.......}
+    InvertIndex['陳水扁'] -> ['news_067927' 'news_031420' 'news_014034' ...]
+    Terms: mapping "term" to idx, or idx back to "term"
     """
 
     rank = []
@@ -74,29 +69,59 @@ if __name__ == '__main__':
     query = [w for w in seg_list]
 
 
-    for docID in TextTermData:
-        doc = TextTermData[docID]
-        keys = [key for key in doc.keys()]
-        twoStageVec = [twostage(doc[key],len(InvertIndexData[key]),
-                        len(TextListData[docID])) for key in doc.keys()]
+    for docID in tqdm(TextTerm):
+        doc = trimKeys(TextTerm[docID])
+        #keys = [key for key in doc.keys()]
 
-        queryVec = np.zeros(len(twoStageVec))
+        twoStageVec = np.zeros(VecLen)
+        contextSize = len(TextList[docID])
+        for term in doc.keys():
+            term = term.strip()
+            if term not in Terms: # should fix ""
+                if term: print('"{}" not in Terms'.format(term))
+            elif term not in InvertIndex:
+                print('"{}" not in InvertIndex'.format(term))
+            elif term not in doc:
+                print('"{}" not in doc'.format(term))
+            else:
+                twoStageVec[Terms[term]] = twostage(doc[term],
+                                                    len(InvertIndex[term]),
+                                                    contextSize)
 
-        for i in range(len(query)):
-            tmpIndex = keys.index(query[i]) if query[i] in keys else -1
-            if tmpIndex != -1:
-                queryVec[tmpIndex] += 1
+        #twoStageVec = [twostage(doc[key],len(InvertIndex[key]),
+        #                len(TextList[docID])) for key in doc.keys()]
+
+        queryVec = np.zeros(VecLen)
+
+        for term in query:
+            term = term.strip()
+            if term in Terms:
+                queryVec[Terms[term]] += 1
+
+        #for i in range(len(query)):
+        #    tmpIndex = keys.index(query[i]) if query[i] in keys else -1
+        #    if tmpIndex != -1:
+        #        queryVec[tmpIndex] += 1
 
 
-        record = (docID, cosSim(np.array(twoStageVec),
-                                   np.array(queryVec)),
-                         eucDis(np.array(twoStageVec),
-                                   np.array(queryVec)))
+        record = (docID,
+                  #cosSim(np.array(twoStageVec),
+                  #       np.array(queryVec)),
+                  eucDis(np.array(twoStageVec),
+                         np.array(queryVec)))
+
         rank.append(record)
 
-        print(twoStageVec)
+        #print(twoStageVec)
+        #print("cos sim:{}".format(record[1]))
+        #print("Euclidean distance:{}".format(record[2]))
+        #print("--- %s seconds ---" % (time.time() - start_time))
 
-        print("cos sim:{}".format(record[1]))
-        print("Euclidean distance:{}".format(record[2]))
-        print("--- %s seconds ---" % (time.time() - start_time))
-        break
+    rank.sort(key=lambda t: t[1], reverse=False)
+    pprint(["{}: {}, eucDis = {}".format(
+                r[0], Title[r[0]], r[1]) for r in rank[:50]])
+
+
+    with open("rank.txt", "w") as fo:
+        for r in rank[:4000]:
+            fo.write("{}: {}, eucDis = {}\n".format(r[0], Title[r[0]], r[1]))
