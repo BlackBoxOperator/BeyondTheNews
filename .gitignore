@@ -1,3 +1,4 @@
 data/url2content.json
 jieba
 local/
+DataMining/*.json
