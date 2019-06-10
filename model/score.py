@@ -27,33 +27,33 @@ def TF_IDF_okapi(occurence,tf,idf,avgDocLength,documentLength,k1=1.2,b=0.75):
 
 
 # get Text Term ex: getTextTerm('news_056765') -> {'針對': 1, '法務': 4, '法務部': 4,.......}
-def getTextTerm(News_Index):
+def getTextTerm():
     with open('../Datamining/TextTerm.json', encoding='utf-8') as json_file:
         data = json.load(json_file)
-        return data[News_Index]
+        return data
 
 
 # get invertIndex ex: getInvertIndex('陳水扁') -> ['news_067927' 'news_031420' 'news_014034' ...]
-def getInvertIndex(term):
+def getInvertIndex():
     with open('../Datamining/InvertIndex.json', encoding='utf-8') as json_file:
         data = json.load(json_file)
-        return data[term]
+        return data
 
 # get the inverse document frequency of term
-def getIDF(term,doclen=100000):
-    invI = len(getInvertIndex(term))
-    return np.log10(doclen/invI)
+#def getIDF(term,doclen=100000):
+#    invI = len(getInvertIndex(term))
+#    return np.log10(doclen/invI)
 
 # get the news title ex: getTitle('news_056765') -> 阿扁保外就醫 民進黨籲尊重人權 - 政治 - 旺報
-def getTitle(News_Index):
+def getTitle():
     with open('../Datamining/AllTitle.json', encoding='utf-8') as json_file:
         data = json.load(json_file)
-        return data[News_Index]
+        return data
 # get the doc
-def getTextList(News_Index):
+def getTextList():
     with open('../Datamining/TextList.json', encoding='utf-8') as json_file:
         data = json.load(json_file)
-        return data[News_Index]
+        return data
 
 def cosSim(v1,v2):
     return np.dot(v1,v2)/(np.sqrt((v1*v1).sum())*np.sqrt((v2*v2).sum()))
@@ -62,6 +62,11 @@ def Euclidean(v1,v2):
 
 
 if __name__ == '__main__':
+    TextTermData = getTextTerm()
+    InvertIndexData = getInvertIndex()
+    AllTitleData = getTitle()
+    TextListData = getTextList()
+    
     start_time = time.time()
     
     # test for single query and single document
@@ -71,9 +76,9 @@ if __name__ == '__main__':
     query = [w for w in seg_list]
     
     
-    a = getTextTerm('news_056765')
+    a = TextTermData['news_056765']
     keys = [key for key in a.keys()]
-    twoStageVec = [twostage(a[key],len(getInvertIndex(key)),len(getTextList('news_056765'))) for key in a.keys()]
+    twoStageVec = [twostage(a[key],len(InvertIndexData[key]),len(TextListData['news_056765'])) for key in a.keys()]
     queryVec = np.zeros(len(twoStageVec))
     
     for i in range(len(query)):
