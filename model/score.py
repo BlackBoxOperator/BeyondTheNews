@@ -66,32 +66,32 @@ if __name__ == '__main__':
     InvertIndexData = getInvertIndex()
     AllTitleData = getTitle()
     TextListData = getTextList()
-    
+
     start_time = time.time()
-    
+
     # test for single query and single document
     jieba.suggest_freq('前總統', True)
     jieba.suggest_freq('就醫', True)
     seg_list = jieba.cut("支持陳前總統保外就醫", cut_all=True)
     query = [w for w in seg_list]
-    
-    
-    a = TextTermData['news_056765']
-    keys = [key for key in a.keys()]
-    twoStageVec = [twostage(a[key],len(InvertIndexData[key]),len(TextListData['news_056765'])) for key in a.keys()]
-    queryVec = np.zeros(len(twoStageVec))
-    
-    for i in range(len(query)):
-        tmpIndex = keys.index(query[i]) if query[i] in keys else -1
-        if tmpIndex != -1:
-            queryVec[tmpIndex] += 1
-    
-    score1 = cosSim(np.array(twoStageVec),np.array(queryVec))
-    score2 = Euclidean(np.array(twoStageVec),np.array(queryVec))
-    print(twoStageVec)
-    print("cos sim:{}".format(score1))
-    print("Euclidean distance:{}".format(score2))
-    print("--- %s seconds ---" % (time.time() - start_time))
 
+
+    for docID in TextTermData:
+        a = TextTermData[docID]
+        keys = [key for key in a.keys()]
+        twoStageVec = [twostage(a[key],len(InvertIndexData[key]),len(TextListData['news_056765'])) for key in a.keys()]
+        queryVec = np.zeros(len(twoStageVec))
+
+        for i in range(len(query)):
+            tmpIndex = keys.index(query[i]) if query[i] in keys else -1
+            if tmpIndex != -1:
+                queryVec[tmpIndex] += 1
+
+        score1 = cosSim(np.array(twoStageVec),np.array(queryVec))
+        score2 = Euclidean(np.array(twoStageVec),np.array(queryVec))
+        print(twoStageVec)
+        print("cos sim:{}".format(score1))
+        print("Euclidean distance:{}".format(score2))
+        print("--- %s seconds ---" % (time.time() - start_time))
 
 
