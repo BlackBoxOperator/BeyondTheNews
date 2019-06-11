@@ -3,3 +3,7 @@ jieba
 local/
 DataMining/*.json
 __pycache__/
+token.txt
+tokey.txt
+ignore.txt
+out
