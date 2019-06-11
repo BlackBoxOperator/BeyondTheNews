@@ -1,7 +1,6 @@
-import os, sys, csv, json, jieba, re
+import os, sys, csv, json, re, jieba
 from pprint import pprint
 from tqdm import *
-
 """
 這個檔案負責把原始文章利用jieba，切成一個一個term，
 並建立字典key = newsID, value = Documents term frequency，
