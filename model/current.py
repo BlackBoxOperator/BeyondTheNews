@@ -4,12 +4,15 @@ import time, jieba, os, json, csv
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer
 
+
 queryFile = os.path.join('..', 'data', 'QS_1.csv')
 stopwordFile = os.path.join('..', 'data', "StopWord.txt")
-tokenFile = os.path.join('..', 'tokens', 'search_token.txt')
-tokeyFile = os.path.join('..', 'tokens', 'search_tokey.txt')
-
 outputFile = os.path.join('..', 'submit', 'current.csv')
+
+cut_method = lambda text: jieba.cut(text, cut_all = True)
+tokenFile = os.path.join('..', 'tokens', 'all_token.txt')
+tokeyFile = os.path.join('..', 'tokens', 'all_tokey.txt')
+
 
 
 if __name__ == '__main__':
@@ -36,7 +39,7 @@ if __name__ == '__main__':
         writer.writerow(headers)
 
         for q_id in tqdm(queries):
-            query = ' '.join([w for w in jieba.cut_for_search(queries[q_id])
+            query = ' '.join([w for w in cut_method(queries[q_id])
                                 if w not in stopwords])
             qv = vectorizer.transform([query])
             sims = cosine_similarity(qv, dv)[0]

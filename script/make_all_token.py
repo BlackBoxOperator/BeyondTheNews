@@ -10,9 +10,9 @@ from tqdm import *
 url2contJson = os.path.join('..', 'data', "url2content.json")
 stopwordTxt = os.path.join('..', 'data', "StopWord.txt")
 idx2URLCSV = os.path.join('..', 'data', 'NC_1.csv')
-tokenFile = os.path.join('..', 'tokens', 'search_token.txt')
-tokeyFile = os.path.join('..', 'tokens', 'search_tokey.txt')
-ignoreFile = os.path.join('..', 'tokens', 'search_ignore.txt')
+tokenFile = os.path.join('..', 'tokens', 'all_token.txt')
+tokeyFile = os.path.join('..', 'tokens', 'all_tokey.txt')
+ignoreFile = os.path.join('..', 'tokens', 'all_ignore.txt')
 
 if input('save token as {}? enter to continue:'.format(tokenFile)).strip(): exit(1)
 if input('save tokey as {}? enter to continue:'.format(tokeyFile)).strip(): exit(1)
@@ -54,7 +54,7 @@ for index in tqdm(index2URL):
         continue
 
     tokey.write(index + '\n')
-    token.write(' '.join([w for w in jieba.cut_for_search(text)
+    token.write(' '.join([w for w in jieba.cut(text, cut_all = True)
                             if w.strip() and w not in stopList]) + '\n')
 
 tokey.close()
