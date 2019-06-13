@@ -1,6 +1,5 @@
 import time, jieba
 import numpy as np
-from corpus import initCorpus, makeVector
 from pprint import pprint
 from tqdm import *
 
@@ -29,11 +28,6 @@ def TF_IDF_okapi(occurence,tf,idf,avgDocLength,documentLength,k1=1.2,b=0.75):
     numerator = tf * idf * (k1+1) * occurrences
     denominator = occurrences + k1 * ((1-b) +  b * documentLength/avgDocLength)
     return numerator / denominator
-
-# get the inverse document frequency of term
-#def getIDF(term,doclen=100000):
-#    invI = len(getInvertIndex(term))
-#    return np.log10(doclen/invI)
 
 def cosSim(v1,v2):
     return np.dot(v1,v2)/(np.sqrt((v1*v1).sum())*np.sqrt((v2*v2).sum()))

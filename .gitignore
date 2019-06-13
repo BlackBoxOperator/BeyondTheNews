@@ -9,3 +9,6 @@ tokens/*.txt
 *tokey.txt
 *ignore.txt
 out
+cur
+pre
+raw.txt
