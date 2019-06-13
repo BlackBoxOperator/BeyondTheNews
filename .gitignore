@@ -1,9 +1,10 @@
-data/url2content.json
+data/*.json
 jieba
 local/
 DataMining/*.json
 __pycache__/
-token.txt
-tokey.txt
-ignore.txt
+tokens/*.txt
+*token.txt
+*tokey.txt
+*ignore.txt
 out

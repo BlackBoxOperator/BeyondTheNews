@@ -1,11 +1,13 @@
-import json;
+import os, json
+
+outputFile = os.path.join('..', 'data', 'InvertIndex.txt')
+textTermFile = os.path.join('..', 'data', 'TextTerm.json')
 
 #建立一個新字典，key = term，value = 出現這個term的文章
 wordDict = dict()
 
 #讀取已經算好每篇文章的term frequency的json檔
-InFile = open("TextTerm.json","r")
-docDict = json.load(InFile)
+docDict = json.load(open(textTermFile,"r"))
 
 #讀取docDict 的key(新聞ID)，value(字典，包含此篇新聞的tf)
 
@@ -23,6 +25,4 @@ for newsName,termF in docDict.items():
 for term,value in wordDict.items():
     wordDict[term] = list(value)
 
-
-OutFile = open("InvertIndex.txt","w")
-json.dump(wordDict,OutFile)
+json.dump(wordDict,open(outputFile,"w"))

@@ -1,11 +1,13 @@
-import json
+import os, json
 """
 這份程式主要在數每篇文章的TF，並且重新製作一個字典，存至 TextList.json
 """
 
+textListFile = os.path.join('..', 'data', 'TextList.json')
+outputFile = os.path.join('..', 'data', 'TextTerm.json')
+
 #載入檔案
-File = open("TextList.json")
-newsDict = json.load(File)
+newsDict = json.load(open(textListFile))
 
 #建立輸出字典 outputDic
 outputDic = dict()
@@ -30,5 +32,4 @@ for key,value in newsDict.items():
     count += 1
 
 #檔案輸出
-OutFile = open("TextTerm.json","w")
-json.dump(outputDic,OutFile)
+json.dump(outputDic,open(outputFile,"w"))
