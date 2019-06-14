@@ -10,7 +10,7 @@ from tqdm import *
 url2contJson = os.path.join('..', 'data', "url2content.json")
 stopwordTxt = os.path.join('..', 'data', "StopWord.txt")
 idx2URLCSV = os.path.join('..', 'data', 'NC_1.csv')
-queryDictFile = os.path.join('..', 'data', 'dict_query.txt')
+queryDictFile = os.path.join('..', 'data', 'dict.txt')
 tokenFile = os.path.join('..', 'tokens', 'search_dict_token.txt')
 tokeyFile = os.path.join('..', 'tokens', 'search_dict_tokey.txt')
 ignoreFile = os.path.join('..', 'tokens', 'search_dict_ignore.txt')
