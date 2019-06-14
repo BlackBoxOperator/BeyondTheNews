@@ -1,6 +1,6 @@
 from tqdm import *
 import numpy as np
-import time, jieba, os, json, csv, re
+import time, jieba, os, json, csv
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
@@ -10,10 +10,9 @@ from score_functions import twostage
 from itertools import starmap
 from bm25 import BM25Transformer
 
-queryFile = os.path.join('..', 'data', 'QS_1.csv')
+queryFile = os.path.join('..', 'data', 'custom_query.txt')
 stopwordFile = os.path.join('..', 'data', "StopWord.txt")
 outputFile = os.path.join('..', 'submit', 'current.csv')
-titleJson = os.path.join('..', 'data', "title.json")
 
 cut_method = jieba.cut_for_search
 tokenFile = os.path.join('..', 'tokens', 'search_dict_token.txt')
@@ -22,28 +21,16 @@ queryDictFile = os.path.join('..', 'data', 'dict_query.txt')
 
 jieba.load_userdict(queryDictFile)
 
-def retain_chinese(line):
-    return re.compile(r"[^\u4e00-\u9fa5]").sub('', line).replace('臺', '台')
-
 if __name__ == '__main__':
 
     stopwords = open(stopwordFile, 'r').read().split()
-    queries = dict([row for row in csv.reader(open(queryFile, 'r'))][1:])
-    titles = json.load(open(titleJson, "r"))
+    queries = open(queryFile, 'r').read().split('\n')
+    two_stage_queries = [(i + 1, f, s) for i, (f, s)
+                                in enumerate(zip(queries[:20], queries[20:]))]
 
     trim = lambda f: [t.strip() for t in f if t.strip()]
     token = trim(open(tokenFile).read().split('\n'))#[:5000]#[:301]
     tokey = trim(open(tokeyFile).read().split('\n'))#[:5000]#[:301]
-
-    # append title to doc
-    print("appending title to document")
-    for i, key in enumerate(tqdm(tokey)):
-        title = retain_chinese(titles.get(key, '')).strip()
-        if title and title != "Non":
-            title_token = ' {}'.format(' '.join([w for w
-                in cut_method(title) if w not in stopwords]))
-            token[i] += title_token
-            #print('+= ' + title_token)
 
     if len(token) != len(tokey):
         print('token len sould eq to tokey len')
@@ -63,24 +50,25 @@ if __name__ == '__main__':
         headers = ['Query_Index'] + ['Rank_{:03d}'.format(i) for i in range(1, 301)]
         writer.writerow(headers)
 
-        for q_id in tqdm(queries):
-            query = ' '.join([w for w in cut_method(queries[q_id].replace('臺', '台'))
-                                if w not in stopwords])
-            print('Query: ' + query)
-            qry_tf = vectorizer.transform([query])
+        for i, fq, sq in tqdm(two_stage_queries):
+            print('First Query: ' + fq)
+            qry_tf = vectorizer.transform([fq])
             qry_bm25 = bm25.transform(qry_tf)
 
             sims = cosine_similarity(qry_bm25, doc_bm25)[0]
             ranks = [(t, v) for (v, t) in zip(sims, tokey)]
             ranks.sort(key=lambda e: e[-1], reverse=True)
 
-            qry_bm25 = qry_bm25 + \
-                     np.sum(doc_bm25[tokey.index(ranks[i][0])] * 0.5 for i in range(100))
+            sub = [tokey.index(r[0]) for r in ranks[:600]]
+            sub_tokey = [r[0] for r in ranks[:600]]
 
+            print('Second Query: ' + sq)
+            qry_tf = vectorizer.transform([sq])
+            qry_bm25 = bm25.transform(qry_tf)
 
-            sims = cosine_similarity(qry_bm25, doc_bm25)[0]
-            ranks = [(t, v) for (v, t) in zip(sims, tokey)]
+            sims = cosine_similarity(qry_bm25, doc_bm25[sub])[0]
+            ranks = [(t, v) for (v, t) in zip(sims, sub_tokey)]
             ranks.sort(key=lambda e: e[-1], reverse=True)
 
-            entry = [q_id] + [e[0] for e in ranks[:300]]
+            entry = ['q_{:02d}'.format(i)] + [e[0] for e in ranks[:300]]
             writer.writerow(entry)

@@ -48,7 +48,7 @@ if __name__ == '__main__':
         writer.writerow(headers)
 
         for q_id in tqdm(queries):
-            query = ' '.join([w for w in cut_method(queries[q_id])
+            query = ' '.join([w for w in cut_method(queries[q_id].replace('臺', '台'))
                                 if w not in stopwords])
             print('Query: ' + query)
             qry_tf = vectorizer.transform([query])

@@ -41,7 +41,7 @@ cont = json.load(data)
 print("done")
 
 def retain_chinese(line):
-    return re.compile(r"[^\u4e00-\u9fa5]").sub('',line)
+    return re.compile(r"[^\u4e00-\u9fa5]").sub('',line).replace('臺', '台')
 
 tokey = open(tokeyFile, "w")
 token = open(tokenFile, "w")
@@ -52,7 +52,7 @@ jieba.load_userdict(queryDictFile)
 
 for index in tqdm(index2URL):
 
-    text = retain_chinese(cont[index2URL[index]]).strip().replace('臺', '台')
+    text = retain_chinese(cont[index2URL[index]]).strip()
     if not text or text.startswith('《蘋果》論壇歡迎投稿'):
         ignore.write(index2URL[index] + '\n')
         continue
