@@ -1,7 +1,6 @@
 # 排序模型、上傳檔案及成績紀錄
 
 還可嘗試的方向：
-- doc 加上 title
 - n-gram
 - 情緒辭典
 - word embedding
