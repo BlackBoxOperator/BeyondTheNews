@@ -7,3 +7,5 @@
 | 2.py | 僅使用 title 作為 corpus，用 `jiebal.cut(all=True)` + cos similarity |
 | 3.py | 同 0.csv, 但加了 ECFA 僅留中文 |
 | 4.py | 同 0.csv, 但把 "不 ??" 連起來 |
+| 5.py | 同 0.csv, 但加入 bm25 |
+| 6.py | 同 5.csv 加上字典 |
