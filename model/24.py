@@ -25,10 +25,6 @@ jieba.load_userdict(queryDictFile)
 def retain_chinese(line):
     return re.compile(r"[^\u4e00-\u9fa5]").sub('', line).replace('臺', '台')
 
-def get_screen_len(line):
-    chlen = len(retain_chinese(line))
-    return (len(line) - chlen) + chlen * 2
-
 if __name__ == '__main__':
 
     stopwords = open(stopwordFile, 'r').read().split()
@@ -44,7 +40,7 @@ if __name__ == '__main__':
 appending title to document...
 """)
 
-    title_weight = 2
+    title_weight = 5
 
     for i, key in enumerate(tqdm(tokey)):
         title = retain_chinese(titles.get(key, '')).strip()
@@ -88,9 +84,9 @@ building corpus vector space...
             if '證所' in queries[q_id]:
                 query += ' 證交稅 證交'
 
-            stages = [20, 40, 60, 80, 100, 120]
+            stages = [20, 40, 60, 80, 100]
 
-            init_bar = '[ stage 0/{} ] Query{}: {}'.format(len(stages), idx + 1, query)
+            init_bar = '[ stage 0/{} ] Query{}: {}'.format(len(stages), idx, query)
             print(init_bar)
             qry_tf = vectorizer.transform([query])
             qry_bm25 = bm25.transform(qry_tf)
@@ -105,7 +101,8 @@ building corpus vector space...
 
                 # relavance feedback stage 1
                 qry_bm25 = qry_bm25 + \
-                         np.sum(doc_bm25[tokey.index(ranks[i][0])] * 0.5 for i in range(fb_n))
+                         np.sum(doc_bm25[tokey.index(ranks[i][0])] * 0.5 \
+                         for i in range(fb_n))
 
 
                 sims = cosine_similarity(qry_bm25, doc_bm25)[0]
@@ -115,5 +112,5 @@ building corpus vector space...
             entry = [q_id] + [e[0] for e in ranks[:300]]
             writer.writerow(entry)
 
-            print("\033[F" + ' ' * get_screen_len(init_bar))
+            print("\033[F" + ' ' * len(init_bar))
             print("\033[F" * 3)

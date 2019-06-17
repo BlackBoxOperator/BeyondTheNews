@@ -48,7 +48,8 @@ class BM25Transformer(BaseEstimator, TransformerMixin):
             document-term matrix
         copy : boolean, optional (default=True)
         """
-        if hasattr(X, 'dtype') and np.issubdtype(X.dtype, np.float):
+        #if hasattr(X, 'dtype') and np.issubdtype(X.dtype, np.float):
+        if hasattr(X, 'dtype') and np.issubdtype(X.dtype, np.dtype(float).type):
             # preserve float family dtype
             X = sp.csr_matrix(X, copy=copy)
         else:

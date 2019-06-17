@@ -25,10 +25,6 @@ jieba.load_userdict(queryDictFile)
 def retain_chinese(line):
     return re.compile(r"[^\u4e00-\u9fa5]").sub('', line).replace('臺', '台')
 
-def get_screen_len(line):
-    chlen = len(retain_chinese(line))
-    return (len(line) - chlen) + chlen * 2
-
 if __name__ == '__main__':
 
     stopwords = open(stopwordFile, 'r').read().split()
@@ -40,17 +36,12 @@ if __name__ == '__main__':
     tokey = trim(open(tokeyFile).read().split('\n'))#[:5000]#[:301]
 
     # append title to doc
-    print("""
-appending title to document...
-""")
-
-    title_weight = 2
-
+    print("appending title to document")
     for i, key in enumerate(tqdm(tokey)):
         title = retain_chinese(titles.get(key, '')).strip()
         if title and title != "Non":
             title_token = ' {}'.format(' '.join([w for w
-                in cut_method(title) if w not in stopwords])) * title_weight
+                in cut_method(title) if w not in stopwords]))
             token[i] += title_token
             #print('+= ' + title_token)
 
@@ -60,11 +51,6 @@ appending title to document...
 
     bm25 = BM25Transformer()
     vectorizer = TfidfVectorizer()
-
-    print("""
-building corpus vector space...
-    """)
-
     doc_tf = vectorizer.fit_transform(tqdm(token))
 
     bm25.fit(doc_tf)
@@ -77,21 +63,10 @@ building corpus vector space...
         headers = ['Query_Index'] + ['Rank_{:03d}'.format(i) for i in range(1, 301)]
         writer.writerow(headers)
 
-        for idx, q_id in enumerate(tqdm(queries)):
-
-
+        for q_id in tqdm(queries):
             query = ' '.join([w for w in cut_method(queries[q_id].replace('臺', '台'))
                                 if w not in stopwords])
-
-            if '中國學生' in queries[q_id]:
-                query += ' 陸生 中生 大陸 學生'
-            if '證所' in queries[q_id]:
-                query += ' 證交稅 證交'
-
-            stages = [20, 40, 60, 80, 100, 120]
-
-            init_bar = '[ stage 0/{} ] Query{}: {}'.format(len(stages), idx + 1, query)
-            print(init_bar)
+            print('Query: ' + query)
             qry_tf = vectorizer.transform([query])
             qry_bm25 = bm25.transform(qry_tf)
 
@@ -99,21 +74,13 @@ building corpus vector space...
             ranks = [(t, v) for (v, t) in zip(sims, tokey)]
             ranks.sort(key=lambda e: e[-1], reverse=True)
 
-            for stage, fb_n in enumerate(stages):
-
-                print("\033[F[ stage {}/{} ]".format(stage + 1, len(stages)))
-
-                # relavance feedback stage 1
-                qry_bm25 = qry_bm25 + \
-                         np.sum(doc_bm25[tokey.index(ranks[i][0])] * 0.5 for i in range(fb_n))
+            qry_bm25 = qry_bm25 + \
+                     np.sum(doc_bm25[tokey.index(ranks[i][0])] * 0.5 for i in range(100))
 
 
-                sims = cosine_similarity(qry_bm25, doc_bm25)[0]
-                ranks = [(t, v) for (v, t) in zip(sims, tokey)]
-                ranks.sort(key=lambda e: e[-1], reverse=True)
+            sims = cosine_similarity(qry_bm25, doc_bm25)[0]
+            ranks = [(t, v) for (v, t) in zip(sims, tokey)]
+            ranks.sort(key=lambda e: e[-1], reverse=True)
 
             entry = [q_id] + [e[0] for e in ranks[:300]]
             writer.writerow(entry)
-
-            print("\033[F" + ' ' * get_screen_len(init_bar))
-            print("\033[F" * 3)
