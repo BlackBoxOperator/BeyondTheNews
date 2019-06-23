@@ -28,15 +28,16 @@
 | 16.py | 16.csv | 0.2276242 | 2019/06/15 00:48:34 | 同上 Relevance Feedback(query + [i=1..100 0.5 Ri])|
 | 17.py | 17.csv | 0.2292303 | 2019/06/15 01:30:41 | 同上 Relevance Feedback, 加了 title|
 | 18.py | 18.csv | 0.2293031 | 2019/06/15 03:44:47 | 同上 but reToken with larger dict |
-| 19.py | 19.csv | 0.2566023 | 2019/06/17 10:17:55	| 同 18.py 手動加 '陸生 中生 大陸' 進 query |
-| 20.py | 20.csv | 0.2566023 | 2019/06/17 10:17:55	| 同 19.py 手動加 '證所' 進 dict |
-| 21.py | 21.csv | 0.2577842 | 2019/06/17 21:21:16	| 同 20.py Relevance Feedback 2 stage(50, 100) |
-| 22.py | 22.csv | 0.2587751 | 2019/06/17 21:40:14 | 同 20.py Relevance Feedback 2 stage(20, 40, 60, 80) |
-| 23.py | 23.csv | 0.2609018 | 2019/06/17 21:49:18 | 同 20.py Relevance Feedback 2 stage(20, 40, 60, 80, 100), doc title * 2 |
-| 24.py | 24.csv | 0.2509281 | 2019/06/17 21:59:42 | 同 20.py Relevance Feedback 2 stage(20, 40, 60, 80, 100), doc title * 5 |
-| 25.py | 25.csv | 0.2591175 | 2019/06/17 22:09:57 | 同 20.py Relevance Feedback 2 stage(20, 40, 60, 80, 100), doc title * 3 |
-| 26.py | 26.csv | 0.2571164 | 2019/06/17 22:26:24 | 同 20.py Relevance Feedback 2 stage(20, 40, 60, 80, 100) |
-| 27.py | 27.csv | 0.2609018 | 2019/06/17 21:49:18 | 同 20.py Relevance Feedback 2 stage(20, 40, 60, 80, 100, 120), doc title * 2 |
+| 19.py | 19.csv | 0.2566023 | 2019/06/17 10:17:55 | 同 18.py 手動加 '陸生 中生 大陸' 進 query |
+| 20.py | 20.csv | 0.2566023 | 2019/06/17 10:17:55 | 同 19.py 手動加 '證所' 進 dict |
+| 21.py | 21.csv | 0.2577842 | 2019/06/17 21:21:16 | 同 20.py Relevance Feedback 2 stage(50, 100) |
+| 22.py | 22.csv | 0.2587751 | 2019/06/17 21:40:14 | 同 20.py Relevance Feedback n stage(20, 40..80) |
+| 23.py | 23.csv | 0.2609018 | 2019/06/17 21:49:18 | 同 20.py Relevance Feedback n stage(20, 40..100), doc title * 2 |
+| 24.py | 24.csv | 0.2509281 | 2019/06/17 21:59:42 | 同 20.py Relevance Feedback n stage(20, 40..100), doc title * 5 |
+| 25.py | 25.csv | 0.2591175 | 2019/06/17 22:09:57 | 同 20.py Relevance Feedback n stage(20, 40..100), doc title * 3 |
+| 26.py | 26.csv | 0.2571164 | 2019/06/17 22:26:24 | 同 20.py Relevance Feedback n stage(20, 40..100) |
+| 27.py | 27.csv | 0.2587824 | 2019/06/17 23:28:03 | 同 20.py Relevance Feedback n stage(20, 40..120), doc title * 2 |
+| 28.py | 28.csv | 0.2605769 | 2019/06/18 00:02:00 | 同 20.py Relevance Feedback n stage(10, 20..100), doc title * 2 |
 
 
 

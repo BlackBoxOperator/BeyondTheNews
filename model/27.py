@@ -88,7 +88,7 @@ building corpus vector space...
             if '證所' in queries[q_id]:
                 query += ' 證交稅 證交'
 
-            stages = [i for i in range(10, 101, 10)] 
+            stages = [20, 40, 60, 80, 100, 120]
 
             init_bar = '[ stage 0/{} ] Query{}: {}'.format(len(stages), idx + 1, query)
             print(init_bar)
