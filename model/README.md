@@ -1,6 +1,7 @@
 # 排序模型、上傳檔案及成績紀錄
 
 還可嘗試的方向：
+- [pre train wrod2vec model](https://drive.google.com/open?id=1brDVqxu9osM3p1vva2JpIUQ_15IvKOZy)
 - n-gram
 - 情緒辭典
 - word embedding
@@ -38,8 +39,5 @@
 | 26.py | 26.csv | 0.2571164 | 2019/06/17 22:26:24 | 同 20.py Relevance Feedback n stage(20, 40..100) |
 | 27.py | 27.csv | 0.2587824 | 2019/06/17 23:28:03 | 同 20.py Relevance Feedback n stage(20, 40..120), doc title * 2 |
 | 28.py | 28.csv | 0.2605769 | 2019/06/18 00:02:00 | 同 20.py Relevance Feedback n stage(10, 20..100), doc title * 2 |
-
-
-
-
+| 29.ipynb | 29.csv | 0.2663411 | 2019/06/23 0:58:07 | 同 27.py relevance feed back += score(word2Vec)|
 
