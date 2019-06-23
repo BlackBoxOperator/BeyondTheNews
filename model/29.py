@@ -37,9 +37,6 @@ def get_screen_len(line):
     chlen = len(retain_chinese(line))
     return (len(line) - chlen) + chlen * 2
 
-def cos_sim(v1,v2):
-        return np.dot(v1,v2)/(np.sqrt((v1*v1).sum())*np.sqrt((v2*v2).sum()))
-
 if __name__ == '__main__':
 
     stopwords = open(stopwordFile, 'r').read().split()
@@ -50,81 +47,50 @@ if __name__ == '__main__':
     token = trim(open(tokenFile).read().split('\n'))#[:5000]#[:301]
     tokey = trim(open(tokeyFile).read().split('\n'))#[:5000]#[:301]
 
-print("zero")
+    # append title to doc
+    print("""
+appending title to document...
+""")
 
-#    # append title to doc
-#    print("""
-#appending title to document...
-#""")
-#
-#    title_weight = 1
-#
-#    for i, key in enumerate(tqdm(tokey)):
-#        title = retain_chinese(titles.get(key, '')).strip()
-#        if title and title != "Non":
-#            title_token = ' {}'.format(' '.join([w for w
-#                in cut_method(title) if w not in stopwords])) * title_weight
-#            token[i] += title_token
-#            #print('+= ' + title_token)
-#
-#    if len(token) != len(tokey):
-#        print('token len sould eq to tokey len')
-#        exit(0)
-#
-#    bm25 = BM25Transformer()
-#    vectorizer = TfidfVectorizer()
-#    print("""
-#    building corpus vector space...
-#        """)
-#
-#    doc_tf = vectorizer.fit_transform(tqdm(token))
-#
-#    bm25.fit(doc_tf)
-#    doc_bm25 = bm25.transform(doc_tf)
-#
-#    print('\ncorpus vector space - ok\n')
+    title_weight = 1
 
+    for i, key in enumerate(tqdm(tokey)):
+        title = retain_chinese(titles.get(key, '')).strip()
+        if title and title != "Non":
+            title_token = ' {}'.format(' '.join([w for w
+                in cut_method(title) if w not in stopwords])) * title_weight
+            token[i] += title_token
+            #print('+= ' + title_token)
 
-print("here")
+    if len(token) != len(tokey):
+        print('token len sould eq to tokey len')
+        exit(0)
 
-tmptoken = [t.split(" ") for t in token]
-tt = np.array(tmptoken)
+    bm25 = BM25Transformer()
+    vectorizer = TfidfVectorizer()
+    print("""
+    building corpus vector space...
+        """)
 
-#print("bulding dict")
-#dictionary = corpora.Dictionary(tt)
+    doc_tf = vectorizer.fit_transform(tqdm(token))
 
-print("loading model")
-model = Word2Vec.load("./model.w2v")
-print("loading model done")
+    bm25.fit(doc_tf)
+    doc_bm25 = bm25.transform(doc_tf)
 
-exit(0)
+    print('\ncorpus vector space - ok\n')
 
-tmpVec = np.zeros((len(tmptoken),len(model.wv[tmptoken[0][0]])))
-for i in range(len(tmptoken)):
-    for j in range(len(tmptoken[i])):
-        tmpVec[i] += model.wv[tmptoken[i][j]]
+    docsTokens = [t.split() for t in token]
 
+    print("loading model")
+    model = Word2Vec.load(os.path.join("..", "train", "model.w2v"))
+    print("loading model done")
 
-qVec = np.zeros((len(queries),len(model.wv[tmptoken[0][0]])))
+    print("making document word vector")
 
-for idx, q_id in enumerate(tqdm(queries)):
-            query = " ".join([w for w in cut_method(queries[q_id].replace('臺', '台'))
-                                if w not in stopwords])
+    docWv = np.array([np.sum(model.wv[docsTokens[i]], axis=0) \
+                        for i in tqdm(range(len(docsTokens)))])
 
-            if '中國學生' in queries[q_id]:
-                query += ' 陸生 中生 大陸 學生'
-            if '證所' in queries[q_id]:
-                query += ' 證交稅 證交'
-            arrQ = str(query).split(" ")
-            for i in range(len(arrQ)):
-                if not 'ECFA' == arrQ[i]:
-                    qVec[idx] += model.wv[arrQ[i]]
-
-
-scores = np.zeros((len(queries),len(tmptoken)))
-for i in range(len(queries)):
-    for j in range(len(tmptoken)):
-        scores[i][j] = cos_sim(qVec[i],tmpVec[j])
+    scores = np.zeros((len(queries),len(docsTokens)))
 
     with open(outputFile, 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
@@ -141,6 +107,11 @@ for i in range(len(queries)):
                 query += ' 陸生 中生 大陸 學生'
             if '證所' in queries[q_id]:
                 query += ' 證交稅 證交'
+
+            qryTokens = [tok for tok in query.split() if tok in model.wv]
+            qryWv = np.sum(model.wv[qryTokens], axis=0)
+
+            scores[idx] = model.wv.cosine_similarities(qryWv, docWv)
 
             stages = [20, 40, 60, 80, 100]
 
@@ -159,7 +130,8 @@ for i in range(len(queries)):
                 print("\033[F[ stage {}/{} ]".format(stage + 1, len(stages)))
 
                 # relavance feedback stage 1
-                qry_bm25 = qry_bm25 +                          np.sum(doc_bm25[tokey.index(ranks[i][0])] * 0.5                          for i in range(fb_n))
+                qry_bm25 = qry_bm25 + \
+                        np.sum(doc_bm25[tokey.index(ranks[i][0])] * 0.5 for i in range(fb_n))
 
 
                 sims = cosine_similarity(qry_bm25, doc_bm25)[0]
