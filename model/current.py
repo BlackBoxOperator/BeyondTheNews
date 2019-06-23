@@ -1,13 +1,21 @@
+#!/usr/bin/env python
+# coding: utf-8
+
 from tqdm import *
 import numpy as np
 import time, jieba, os, json, csv, re
+
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.feature_extraction.text import CountVectorizer
+
+from gensim import corpora
+from gensim.models import Phrases
+from gensim.models import Word2Vec
+
 from scipy.sparse import csr_matrix
-from score_functions import twostage
-from itertools import starmap
+
 from bm25 import BM25Transformer
 
 queryFile = os.path.join('..', 'data', 'QS_1.csv')
@@ -60,10 +68,9 @@ appending title to document...
 
     bm25 = BM25Transformer()
     vectorizer = TfidfVectorizer()
-
     print("""
-building corpus vector space...
-    """)
+    building corpus vector space...
+        """)
 
     doc_tf = vectorizer.fit_transform(tqdm(token))
 
@@ -71,6 +78,19 @@ building corpus vector space...
     doc_bm25 = bm25.transform(doc_tf)
 
     print('\ncorpus vector space - ok\n')
+
+    docsTokens = [t.split() for t in token]
+
+    print("loading model")
+    model = Word2Vec.load(os.path.join("..", "train", "model.w2v"))
+    print("loading model done")
+
+    print("making document word vector")
+
+    docWv = np.array([np.sum(model.wv[docsTokens[i]], axis=0) \
+                        for i in tqdm(range(len(docsTokens)))])
+
+    scores = np.zeros((len(queries),len(docsTokens)))
 
     with open(outputFile, 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
@@ -88,7 +108,12 @@ building corpus vector space...
             if '證所' in queries[q_id]:
                 query += ' 證交稅 證交'
 
-            stages = [i for i in range(10, 101, 10)] 
+            qryTokens = [tok for tok in query.split() if tok in model.wv]
+            qryWv = np.sum(model.wv[qryTokens], axis=0)
+
+            scores[idx] = model.wv.cosine_similarities(qryWv, docWv)
+
+            stages = [20, 40, 60, 80, 100]
 
             init_bar = '[ stage 0/{} ] Query{}: {}'.format(len(stages), idx + 1, query)
             print(init_bar)
@@ -96,6 +121,7 @@ building corpus vector space...
             qry_bm25 = bm25.transform(qry_tf)
 
             sims = cosine_similarity(qry_bm25, doc_bm25)[0]
+            sims += scores[idx]
             ranks = [(t, v) for (v, t) in zip(sims, tokey)]
             ranks.sort(key=lambda e: e[-1], reverse=True)
 
@@ -105,10 +131,11 @@ building corpus vector space...
 
                 # relavance feedback stage 1
                 qry_bm25 = qry_bm25 + \
-                         np.sum(doc_bm25[tokey.index(ranks[i][0])] * 0.5 for i in range(fb_n))
+                        np.sum(doc_bm25[tokey.index(ranks[i][0])] * 0.5 for i in range(fb_n))
 
 
                 sims = cosine_similarity(qry_bm25, doc_bm25)[0]
+                sims += scores[idx]
                 ranks = [(t, v) for (v, t) in zip(sims, tokey)]
                 ranks.sort(key=lambda e: e[-1], reverse=True)
 
