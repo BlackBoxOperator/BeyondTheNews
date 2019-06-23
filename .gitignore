@@ -1,5 +1,8 @@
 data/*.json
 !data/title.json
+train/*
+!train/*.py
+!train/*.md
 jieba
 local/
 DataMining/*.json
@@ -12,3 +15,4 @@ out
 cur
 pre
 raw.txt
+.ipynb*
