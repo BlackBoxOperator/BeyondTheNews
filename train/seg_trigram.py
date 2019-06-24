@@ -14,6 +14,7 @@ def trigram(li):
             grams += [s[i:i+3] for i in range(0,len(s), 3)]
             grams += [s[i:i+3] for i in range(1,len(s), 3)]
             grams += [s[i:i+3] for i in range(2,len(s), 3)]
+    return grams
 
 def retain_chinese(line):
     return re.compile(r"[^\u4e00-\u9fa5 ]").sub('',line).replace('臺', '台')
