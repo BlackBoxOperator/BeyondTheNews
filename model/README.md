@@ -40,4 +40,7 @@
 | 27.py | 27.csv | 0.2587824 | 2019/06/17 23:28:03 | 同 20.py Relevance Feedback n stage(20, 40..120), doc title * 2 |
 | 28.py | 28.csv | 0.2605769 | 2019/06/18 00:02:00 | 同 20.py Relevance Feedback n stage(10, 20..100), doc title * 2 |
 | 29.py | 29.csv | 0.2663411 | 2019/06/23 00:58:07 | 同 26.py Relevance Feedback += score(word2Vec)|
-| 30.py | 29.csv | 0.2663411 | 2019/06/23 00:58:07 | 同 23.py Relevance Feedback += score(word2Vec)|
+| 30.py | 30.csv | 0.2668813 | 2019/06/24 04:02:06 | 同 23.py Relevance Feedback += score(word2Vec)|
+
+| 31.py | 31.csv | 0.2677088 | 2019/06/25 02:14:04 | 同 30.py Relevance Feedback += score(word2Vec_wikiPre_news_d100)|
+| 33.py | 32.csv | 0.2712938 | 2019/06/25 00:16:59 | 同 30.py Relevance Feedback += score(word2Vec_news_d200)|

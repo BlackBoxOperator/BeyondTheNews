@@ -10,6 +10,23 @@ from logger import EpochLogger
 def retain_chinese(line):
     return re.compile(r"[^\u4e00-\u9fa5]").sub('', line).replace('臺', '台')
 
+class EpochLogger(CallbackAny2Vec):
+    '''Callback to log information about training'''
+
+    def __init__(self):
+        self.epoch = 0
+
+    def on_epoch_begin(self, model):
+        if self.epoch == 0:
+            self.bar = tqdm(total=model.epochs)
+
+    def on_epoch_end(self, model):
+        self.bar.update(1)
+        self.epoch += 1
+        if self.epoch == model.epochs:
+            self.bar.close()
+            self.bar = None
+
 titleJson = os.path.join('..', 'data', "title.json")
 stopwordFile = os.path.join('..', 'data', "StopWord.txt")
 tokenFile = os.path.join('..', 'tokens', 'search_dict_token.txt')
@@ -42,8 +59,8 @@ for i, key in enumerate(tqdm(docIDs)):
 print("spliting tokens...")
 docsTokens = [doc.split() for doc in tqdm(docs)]
 
-print("creating model...")
-model = Word2Vec(tqdm(docsTokens), min_count=5, size=200, window=5, workers=3, callbacks=[EpochLogger()])
+print("loading pretrained model...")
+model = Word2Vec.load(os.path.join('wiki', '20180309wiki_model.bin'))
 
 print("training model...")
 model.train(tqdm(docsTokens), total_examples=len(docsTokens), epochs=100, callbacks=[EpochLogger()])
