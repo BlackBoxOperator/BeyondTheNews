@@ -18,4 +18,5 @@ pre
 raw.txt
 Unt*.ipynb*
 *.w2v*
+*.w2v
 current.csv
