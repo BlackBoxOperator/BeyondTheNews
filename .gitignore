@@ -1,9 +1,13 @@
 data/*.json
 !data/title.json
+train/*
+!train/*.py
+!train/*.md
 jieba
 local/
 DataMining/*.json
 __pycache__/
+model/.ipynb*/
 tokens/*.txt
 *token.txt
 *tokey.txt
@@ -12,3 +16,6 @@ out
 cur
 pre
 raw.txt
+Unt*.ipynb*
+*.w2v*
+current.csv

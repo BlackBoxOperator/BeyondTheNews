@@ -1,11 +1,18 @@
 # 排序模型、上傳檔案及成績紀錄
 
 還可嘗試的方向：
+<<<<<<< HEAD
 - [pre train wrod2vec model](https://drive.google.com/open?id=1brDVqxu9osM3p1vva2JpIUQ_15IvKOZy)
 - n-gram
 - 情緒辭典
 - word embedding
   - [同義詞搜尋系統](https://120.127.233.228/word2vec/)
+=======
+- n-gram
+- 情緒辭典
+- [同義詞搜尋系統](https://120.127.233.228/word2vec/)
+- word embedding
+>>>>>>> 6aa3b91d9f7c7fff040ae2df106c8be7a4e94813
 - nn
 
 | model | submit |    成績   |         日期        | 備註 |
@@ -20,8 +27,13 @@
 | 7.py  | 7.csv  | 0.1919284 | 2019/06/14 22:58:53 | 同 6.py 加上 Relevance Feedback(query + 0.5 R1) |
 | 8.py  | 8.csv  | 0.1837587 | 2019/06/14 23:29:11 | 同 6.py 加上 custom query |
 | 9.py  | 9.csv  | 0.1972519 | 2019/06/14 23:41:07 | 同上上 Relevance Feedback(query + 0.5 R1 + 0.25 R2) |
+<<<<<<< HEAD
 | 10.py | 10.csv | 0.2014145 | 2019/06/14 23:46:09 | 同上 Relevance Feedback(query + 0.75 R1 + 0.5 R2 + 0.25 R3) |
 | 11.py | 11.csv | 0.2034738 | 2019/06/15 00:04:15 | 同上 Relevance Feedback(query + 0.8 R1 + 0.6 R2 + 0.4 R3 + 0.2 R4 + 0.1 R5) |
+=======
+| 10.py | 10.csv | 0.2014145 | 2019/06/14 23:46:09 | 同上 Relevance Feedback(query + 0.[75,5,25] R[1,2,3]) |
+| 11.py | 11.csv | 0.2034738 | 2019/06/15 00:04:15 | 同上 Relevance Feedback(query + 0.[8,6,4,2,1] R[1,2,3,4,5]|
+>>>>>>> 6aa3b91d9f7c7fff040ae2df106c8be7a4e94813
 | 12.py | 12.csv | 0.2060819 | 2019/06/15 00:15:18 | 同上 Relevance Feedback(query + [i=1..9 (1-0.1 * i) Ri] + 0.1 R10 ) |
 | 13.py | 13.csv | 0.2137932 | 2019/06/15 00:21:19 | 同上 Relevance Feedback(query + [i=1..10 0.5 Ri]) |
 | 14.py | 14.csv | 0.2204961 | 2019/06/15 00:28:27 | 同上 Relevance Feedback(query + [i=1..30 0.5 Ri]) |
@@ -29,6 +41,7 @@
 | 16.py | 16.csv | 0.2276242 | 2019/06/15 00:48:34 | 同上 Relevance Feedback(query + [i=1..100 0.5 Ri])|
 | 17.py | 17.csv | 0.2292303 | 2019/06/15 01:30:41 | 同上 Relevance Feedback, 加了 title|
 | 18.py | 18.csv | 0.2293031 | 2019/06/15 03:44:47 | 同上 but reToken with larger dict |
+<<<<<<< HEAD
 | 19.py | 19.csv | 0.2566023 | 2019/06/17 10:17:55	| 同 18.py 手動加 '陸生 中生 大陸' 進 query |
 | 20.py | 20.csv | 0.2566023 | 2019/06/17 10:17:55	| 同 19.py 手動加 '證所' 進 dict |
 | 21.py | 21.csv | 0.2577842 | 2019/06/17 21:21:16	| 同 20.py Relevance Feedback 2 stage(50, 100) |
@@ -44,3 +57,17 @@
 
 
 
+=======
+| 19.py | 19.csv | 0.2566023 | 2019/06/17 10:17:55 | 同 18.py 手動加 '陸生 中生 大陸' 進 query |
+| 20.py | 20.csv | 0.2566023 | 2019/06/17 10:17:55 | 同 19.py 手動加 '證所' 進 dict |
+| 21.py | 21.csv | 0.2577842 | 2019/06/17 21:21:16 | 同 20.py Relevance Feedback 2 stage(50, 100) |
+| 22.py | 22.csv | 0.2587751 | 2019/06/17 21:40:14 | 同 20.py Relevance Feedback n stage(20, 40..80) |
+| 23.py | 23.csv | 0.2609018 | 2019/06/17 21:49:18 | 同 20.py Relevance Feedback n stage(20, 40..100), doc title * 2 |
+| 24.py | 24.csv | 0.2509281 | 2019/06/17 21:59:42 | 同 20.py Relevance Feedback n stage(20, 40..100), doc title * 5 |
+| 25.py | 25.csv | 0.2591175 | 2019/06/17 22:09:57 | 同 20.py Relevance Feedback n stage(20, 40..100), doc title * 3 |
+| 26.py | 26.csv | 0.2571164 | 2019/06/17 22:26:24 | 同 20.py Relevance Feedback n stage(20, 40..100) |
+| 27.py | 27.csv | 0.2587824 | 2019/06/17 23:28:03 | 同 20.py Relevance Feedback n stage(20, 40..120), doc title * 2 |
+| 28.py | 28.csv | 0.2605769 | 2019/06/18 00:02:00 | 同 20.py Relevance Feedback n stage(10, 20..100), doc title * 2 |
+| 29.py | 29.csv | 0.2663411 | 2019/06/23 00:58:07 | 同 26.py Relevance Feedback += score(word2Vec)|
+| 30.py | 29.csv | 0.2663411 | 2019/06/23 00:58:07 | 同 23.py Relevance Feedback += score(word2Vec)|
+>>>>>>> 6aa3b91d9f7c7fff040ae2df106c8be7a4e94813
