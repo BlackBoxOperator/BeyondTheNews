@@ -108,10 +108,33 @@ appending title to document...
             if '證所' in queries[q_id]:
                 query += ' 證交稅 證交'
 
-            qryTokens = [tok for tok in query.split() if tok in model.wv]
-            qryWv = np.sum(model.wv[qryTokens], axis=0)
+            qryTokenWvs = []
+            for tok in query.split():
+                try:
+                    v = model.wv.get_vector(tok)
+                except KeyError:
+                    pass
+                qryTokenWvs.append(v)
+
+            qryWv = np.sum(qryTokenWvs, axis=0)
 
             scores[idx] = model.wv.cosine_similarities(qryWv, docWv)
+
+
+            termWvs = [[t] for t in qryTokenWvs]
+                   # +  list(zip(qryTokens, qryTokens[1:]))
+            sim_query = ''
+            for tv in termWvs:
+                try:
+                    sim_terms = model.wv.most_similar(positive=tv, topn=10)
+                except Exception:
+                    continue # index out of range, wait to findout
+                sims = [t[0] for t in sim_terms\
+                                     if t[1] > 0.85]
+                if not sims: sims = [sim_terms[0][0]]
+                sim_query += " {}".format(' '.join(sims))
+
+            query += sim_query
 
             stages = [20, 40, 60, 80, 100]
 

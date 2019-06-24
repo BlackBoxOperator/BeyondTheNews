@@ -1,4 +1,4 @@
-import os, datetime, dill
+import os, datetime # , dill
 from tqdm import *
 import numpy as np
 from gensim import corpora
@@ -34,13 +34,16 @@ print("spliting tokens...")
 docsTokens = [doc.split() for doc in tqdm(docs)]
 
 print("creating model...")
-model = Word2Vec(tqdm(docsTokens), min_count=50, size=100, window=5, workers=3, callbacks=[EpochLogger()])
+#model = Word2Vec(tqdm(docsTokens), min_count=50, size=100, window=5, workers=3, callbacks=[EpochLogger()])
+model = Word2Vec(tqdm(docsTokens), min_count=50, size=1, window=5, callbacks=[EpochLogger()])
 
-print("training model...")
-model.train(tqdm(docsTokens), total_examples=len(docsTokens), epochs=1, callbacks=[EpochLogger()])
+#print("training model...")
+#model.train(tqdm(docsTokens), total_examples=len(docsTokens), epochs=1, callbacks=[EpochLogger()])
 
 print("saving model...")
-#model.save("{}.w2v".format(datetime.datetime.now().strftime("%Y_%m%d_%H%M")))
+#model.save("./{}.w2v".format(datetime.datetime.now().strftime("%Y_%m%d_%H%M")))
+#model.save("./fuck.w2v")
+model.save("/home/zxc/Class/WSM/BeyondTheNewsOmega/train/word2vec.model")
 #model.save("model.w2v")
-with open("{}.w2v".format(datetime.datetime.now().strftime("%Y_%m%d_%H%M")),'wb') as f:
-    dill.dump(model, f)
+#with open("{}.w2v".format(datetime.datetime.now().strftime("%Y_%m%d_%H%M")),'wb') as f:
+#    dill.dump(model, f)
