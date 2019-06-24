@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-from tqdm import *
-import numpy as np
-import time, jieba, os, json, csv, re
-=======
 #!/usr/bin/env python
 # coding: utf-8
 
@@ -10,16 +5,10 @@ from tqdm import *
 import numpy as np
 import time, jieba, os, json, csv, re
 
->>>>>>> 6aa3b91d9f7c7fff040ae2df106c8be7a4e94813
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.feature_extraction.text import CountVectorizer
-<<<<<<< HEAD
-from scipy.sparse import csr_matrix
-from score_functions import twostage
-from itertools import starmap
-=======
 
 from gensim import corpora
 from gensim.models import Phrases
@@ -27,7 +16,6 @@ from gensim.models import Word2Vec
 
 from scipy.sparse import csr_matrix
 
->>>>>>> 6aa3b91d9f7c7fff040ae2df106c8be7a4e94813
 from bm25 import BM25Transformer
 
 queryFile = os.path.join('..', 'data', 'QS_1.csv')
@@ -80,16 +68,9 @@ appending title to document...
 
     bm25 = BM25Transformer()
     vectorizer = TfidfVectorizer()
-<<<<<<< HEAD
-
-    print("""
-building corpus vector space...
-    """)
-=======
     print("""
     building corpus vector space...
         """)
->>>>>>> 6aa3b91d9f7c7fff040ae2df106c8be7a4e94813
 
     doc_tf = vectorizer.fit_transform(tqdm(token))
 
@@ -98,8 +79,6 @@ building corpus vector space...
 
     print('\ncorpus vector space - ok\n')
 
-<<<<<<< HEAD
-=======
     docsTokens = [t.split() for t in token]
 
     print("loading model")
@@ -113,7 +92,6 @@ building corpus vector space...
 
     scores = np.zeros((len(queries),len(docsTokens)))
 
->>>>>>> 6aa3b91d9f7c7fff040ae2df106c8be7a4e94813
     with open(outputFile, 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
         headers = ['Query_Index'] + ['Rank_{:03d}'.format(i) for i in range(1, 301)]
@@ -130,16 +108,35 @@ building corpus vector space...
             if '證所' in queries[q_id]:
                 query += ' 證交稅 證交'
 
-<<<<<<< HEAD
-            stages = [20, 40, 60, 80, 100, 120]
-=======
-            qryTokens = [tok for tok in query.split() if tok in model.wv]
-            qryWv = np.sum(model.wv[qryTokens], axis=0)
+            qryTokenWvs = []
+            for tok in query.split():
+                try:
+                    v = model.wv.get_vector(tok)
+                except KeyError:
+                    pass
+                qryTokenWvs.append(v)
+
+            qryWv = np.sum(qryTokenWvs, axis=0)
 
             scores[idx] = model.wv.cosine_similarities(qryWv, docWv)
 
+
+            termWvs = [[t] for t in qryTokenWvs]
+                   # +  list(zip(qryTokens, qryTokens[1:]))
+            sim_query = ''
+            for tv in termWvs:
+                try:
+                    sim_terms = model.wv.most_similar(positive=tv, topn=10)
+                except Exception:
+                    continue # index out of range, wait to findout
+                sims = [t[0] for t in sim_terms\
+                                     if t[1] > 0.85]
+                if not sims: sims = [sim_terms[0][0]]
+                sim_query += " {}".format(' '.join(sims))
+
+            query += sim_query
+
             stages = [20, 40, 60, 80, 100]
->>>>>>> 6aa3b91d9f7c7fff040ae2df106c8be7a4e94813
 
             init_bar = '[ stage 0/{} ] Query{}: {}'.format(len(stages), idx + 1, query)
             print(init_bar)
@@ -147,10 +144,7 @@ building corpus vector space...
             qry_bm25 = bm25.transform(qry_tf)
 
             sims = cosine_similarity(qry_bm25, doc_bm25)[0]
-<<<<<<< HEAD
-=======
             sims += scores[idx]
->>>>>>> 6aa3b91d9f7c7fff040ae2df106c8be7a4e94813
             ranks = [(t, v) for (v, t) in zip(sims, tokey)]
             ranks.sort(key=lambda e: e[-1], reverse=True)
 
@@ -160,18 +154,11 @@ building corpus vector space...
 
                 # relavance feedback stage 1
                 qry_bm25 = qry_bm25 + \
-<<<<<<< HEAD
-                         np.sum(doc_bm25[tokey.index(ranks[i][0])] * 0.5 for i in range(fb_n))
-
-
-                sims = cosine_similarity(qry_bm25, doc_bm25)[0]
-=======
                         np.sum(doc_bm25[tokey.index(ranks[i][0])] * 0.5 for i in range(fb_n))
 
 
                 sims = cosine_similarity(qry_bm25, doc_bm25)[0]
                 sims += scores[idx]
->>>>>>> 6aa3b91d9f7c7fff040ae2df106c8be7a4e94813
                 ranks = [(t, v) for (v, t) in zip(sims, tokey)]
                 ranks.sort(key=lambda e: e[-1], reverse=True)
 
