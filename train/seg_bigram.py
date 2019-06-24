@@ -34,7 +34,7 @@ def main():
 #        for stopword in stopwords:
 #            stopword_set.add(stopword.strip('\n'))
 
-    output = open('wiki_bigram_seg.txt', 'w', encoding='utf-8')
+    output = open(os.path.join('wiki_tokens', 'wiki_bigram_seg.txt'), 'w', encoding='utf-8')
     with open('wiki_zh_tw.txt', 'r', encoding='utf-8') as content :
         for texts_num, line in enumerate(tqdm(content, total=341018)):
             sentences = retain_chinese(line.strip()).split()
