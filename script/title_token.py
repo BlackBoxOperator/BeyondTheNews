@@ -8,7 +8,7 @@ queryDictFile = os.path.join('..', 'data', 'dict_query.txt')
 jieba.load_userdict(queryDictFile)
 
 stopwordFile = os.path.join('..', 'data', "StopWord.txt")
-stopwords = open(stopwordFile, 'r').read().split()
+stopwords = set(open(stopwordFile, 'r').read().split())
 
 def retain_chinese(line):
     return re.compile(r"[^\u4e00-\u9fa5]").sub('', line).replace('臺', '台')

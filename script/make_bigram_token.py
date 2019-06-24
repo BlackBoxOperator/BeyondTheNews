@@ -1,4 +1,4 @@
-import os, sys, csv, json, re, jieba
+import os, sys, csv, json, re
 from pprint import pprint
 from tqdm import *
 """
@@ -10,10 +10,9 @@ from tqdm import *
 url2contJson = os.path.join('..', 'data', "url2content.json")
 stopwordTxt = os.path.join('..', 'data', "StopWord.txt")
 idx2URLCSV = os.path.join('..', 'data', 'NC_1.csv')
-queryDictFile = os.path.join('..', 'data', 'dict.txt')
-tokenFile = os.path.join('..', 'tokens', 'search_dict_token.txt')
-tokeyFile = os.path.join('..', 'tokens', 'search_dict_tokey.txt')
-ignoreFile = os.path.join('..', 'tokens', 'search_dict_ignore.txt')
+tokenFile = os.path.join('..', 'tokens', 'bigram_token.txt')
+tokeyFile = os.path.join('..', 'tokens', 'bigram_tokey.txt')
+ignoreFile = os.path.join('..', 'tokens', 'bigram_ignore.txt')
 
 if input('save token as {}? enter to continue:'.format(tokenFile)).strip(): exit(1)
 if input('save tokey as {}? enter to continue:'.format(tokeyFile)).strip(): exit(1)
@@ -41,14 +40,19 @@ cont = json.load(data)
 print("done")
 
 def retain_chinese(line):
-    return re.compile(r"[^\u4e00-\u9fa5]").sub('',line).replace('臺', '台')
+    return re.compile(r"[^\u4e00-\u9fa5]").sub(' ',line).replace('臺', '台')
+
+def bigram(li):
+    grams = []
+    for s in li:
+        if len(s) > 2:
+            grams += [s[i:i+2] for i in range(0,len(s), 2)]
+            grams += [s[i:i+2] for i in range(1,len(s), 2)]
+    return grams
 
 tokey = open(tokeyFile, "w")
 token = open(tokenFile, "w")
 ignore = open(ignoreFile, "w")
-
-
-jieba.load_userdict(queryDictFile)
 
 for index in tqdm(index2URL):
 
@@ -58,7 +62,7 @@ for index in tqdm(index2URL):
         continue
 
     tokey.write(index + '\n')
-    token.write(' '.join([w for w in jieba.cut_for_search(text)
+    token.write(' '.join([w for w in bigram(text.split())
                             if w.strip() and w not in stopList]) + '\n')
 
 tokey.close()

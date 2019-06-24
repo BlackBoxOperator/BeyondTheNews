@@ -47,7 +47,7 @@ index2URL = {row[0]: row[1] for row in csvr}
 stopList 製作停用詞的列表，把所有停用詞加到stopList中
 
 """
-stopList = stop.read().split()
+stopList = set(stop.read().split())
 
 print("loading json... ", end='')
 sys.stdout.flush()
