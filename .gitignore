@@ -24,3 +24,5 @@ current.csv
 *.npy
 *.rar
 NC_2.csv
+content.csv
+error_log.txt
