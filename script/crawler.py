@@ -1,12 +1,9 @@
-import webbrowser, re, csv, os
+import webbrowser, re, csv, os, sys
 import requests as rq
 from bs4 import BeautifulSoup
 from tqdm import tqdm
 
 resc = lambda s: s.replace("\r", '').replace("", "").replace("\n", "")
-
-f = open(os.path.join('..', 'data', 'error_log.txt'), 'w', encoding="UTF-8")
-print = lambda *ss: f.write(' '.join([str(s) for s in ss]) + '\n')
 
 nonsense = ['(中時電子報)',
             '想看更多新聞嗎',
@@ -30,6 +27,18 @@ article_attrs = {
         'home.appledaily.com.tw': {'class': 'ncbox_cont'},
         }
 
+
+def handle_uee(filename):
+    return repr(filename)[1:-1]
+
+def writerow(writer, row, log):
+    try:
+        writer.writerow(row)
+    except UnicodeEncodeError:
+        index, _, _ = row
+        log(index, "- Encode Error -")
+        writer.writerow([handle_uee(r) for r in row])
+
 def article_attrs_by(url):
     for domain in article_attrs:
         if domain in url:
@@ -43,56 +52,74 @@ csvr = csv.reader(ctx); next(csvr, None)
 
 # assign range here, 80w
 # NC = list(csvr)[400000:] # from 40w to 80w
-NC = list(csvr)
 
-with open(os.path.join('..', 'data', 'content.csv'), 'w', newline='', encoding="UTF-8") as csvfile:
-    writer = csv.writer(csvfile)
-    writer.writerow(['index', 'title', 'content'])
+start = 0
 
-    for index, url in tqdm(NC, ascii=True):
+if len(sys.argv) > 1:
+    start = int(sys.argv[1])
 
-        try:
-            request = rq.get(url)
-            html = request.text
-            if request.status_code != 200:
-                print(index, "- status: {} -".format(request.status_code), url)
-                writer.writerow([index, '', ''])
-        except Exception as e:
-            print(index, "- invalid URL -", e, url, e)
-            writer.writerow([index, '', ''])
-            continue
+NC = list(csvr)[start:]
 
-        soup = BeautifulSoup(html, "html.parser") 
-        title = resc(soup.title.get_text() if soup.title else '')
+print("start from:", NC[0][0])
+if input("Enter to continue else break:"):
+    print("terminated"), exit(0)
 
-        #if not title:
-        #    print(index, "- no title (404) -", url)
-            
-        if any(pay in url for pay in paynews):
-            print(index, "- skip apple -", url)
-            writer.writerow([index, title, ''])
-            continue
+print("start crawling...")
 
-        article = soup.find("div", attrs=article_attrs_by(url))
+mode = 'a' if start else 'w'
 
-        if not article:
-            """
-            404 not found
-            """
-            print(index, '- no article (404) -', url)
-            writer.writerow([index, title, ''])
-            continue
+with open(os.path.join('..', 'data', 'log.txt'), mode, encoding="UTF-8") as logfile:
+    log = lambda *ss: logfile.write(' '.join([str(s) for s in ss]) + '\n')
 
-        paragraphs = article.findChildren("p")
+    with open(os.path.join('..', 'data', 'content.csv'), mode, newline='', encoding="UTF-8") as csvfile:
 
-        if not paragraphs or ('tvbs' in url and len(paragraphs) < 5):
-            content = resc(''.join([s for s in article.get_text().split() \
-                                if not any([s.startswith(n) for n in nonsense])
-                                and not any([s == n for n in nonwords])]))
-            writer.writerow([index, title, content])
-        else:
-            paragraphs += article.find_all(re.compile('^h[1-6]$'))
-            content = resc(''.join([s for s in [p.get_text().strip() for p in paragraphs] \
-                                        if not any([s.startswith(n) for n in nonsense])
-                                        and not any([s == n for n in nonwords])]))
-            writer.writerow([index, title, content])
+        writer = csv.writer(csvfile)
+
+        if not start: writerow(writer, ['index', 'title', 'content'], log)
+
+        for index, url in tqdm(NC, ascii=True):
+
+            try:
+                request = rq.get(url)
+                html = request.text
+                if request.status_code != 200:
+                    log(index, "- status: {} -".format(request.status_code), url)
+            except Exception as e:
+                log(index, "- invalid URL -", e, url, e)
+                writerow(writer, [index, '', ''], log)
+                continue
+
+            soup = BeautifulSoup(html, "html.parser") 
+            title = resc(soup.title.get_text() if soup.title else '')
+
+            #if not title:
+            #    log(index, "- no title (404) -", url)
+                
+            if any(pay in url for pay in paynews):
+                log(index, "- skip apple -", url)
+                writerow(writer, [index, title, ''], log)
+                continue
+
+            article = soup.find("div", attrs=article_attrs_by(url))
+
+            if not article:
+                """
+                404 not found
+                """
+                log(index, '- no article (404) -', url)
+                writerow(writer, [index, title, ''], log)
+                continue
+
+            paragraphs = article.findChildren("p")
+
+            if not paragraphs or ('tvbs' in url and len(paragraphs) < 5):
+                content = resc(''.join([s for s in article.get_text().split() \
+                                    if not any([s.startswith(n) for n in nonsense])
+                                    and not any([s == n for n in nonwords])]))
+                writerow(writer, [index, title, content], log)
+            else:
+                paragraphs += article.find_all(re.compile('^h[1-6]$'))
+                content = resc(''.join([s for s in [p.get_text().strip() for p in paragraphs] \
+                                            if not any([s.startswith(n) for n in nonsense])
+                                            and not any([s == n for n in nonwords])]))
+                writerow(writer, [index, title, content], log)
