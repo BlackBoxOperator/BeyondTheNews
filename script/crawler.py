@@ -3,6 +3,7 @@ import requests as rq
 from bs4 import BeautifulSoup
 from tqdm import tqdm
 
+resc = lambda s: s.replace("\r", '').replace("", "").replace("\n", "")
 
 f = open(os.path.join('..', 'data', 'error_log.txt'), 'w', encoding="UTF-8")
 print = lambda *ss: f.write(' '.join([str(s) for s in ss]) + '\n')
@@ -62,10 +63,10 @@ with open(os.path.join('..', 'data', 'content.csv'), 'w', newline='', encoding="
             continue
 
         soup = BeautifulSoup(html, "html.parser") 
-        title = soup.title.get_text() if soup.title else ''
+        title = resc(soup.title.get_text() if soup.title else '')
 
-        if not title:
-            print(index, "- no title (404) -", url)
+        #if not title:
+        #    print(index, "- no title (404) -", url)
             
         if any(pay in url for pay in paynews):
             print(index, "- skip apple -", url)
@@ -85,13 +86,13 @@ with open(os.path.join('..', 'data', 'content.csv'), 'w', newline='', encoding="
         paragraphs = article.findChildren("p")
 
         if not paragraphs or ('tvbs' in url and len(paragraphs) < 5):
-            content = ''.join([s for s in article.get_text().split() \
+            content = resc(''.join([s for s in article.get_text().split() \
                                 if not any([s.startswith(n) for n in nonsense])
-                                and not any([s == n for n in nonwords])])
+                                and not any([s == n for n in nonwords])]))
             writer.writerow([index, title, content])
         else:
             paragraphs += article.find_all(re.compile('^h[1-6]$'))
-            content = ''.join([s for s in [p.get_text().strip() for p in paragraphs] \
+            content = resc(''.join([s for s in [p.get_text().strip() for p in paragraphs] \
                                         if not any([s.startswith(n) for n in nonsense])
-                                        and not any([s == n for n in nonwords])])
+                                        and not any([s == n for n in nonwords])]))
             writer.writerow([index, title, content])
