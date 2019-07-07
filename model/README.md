@@ -44,3 +44,5 @@
 
 | 31.py | 31.csv | 0.2677088 | 2019/06/25 02:14:04 | 同 30.py Relevance Feedback += score(word2Vec_wikiPre_news_d100)|
 | 32.py | 32.csv | 0.2712938 | 2019/06/25 00:16:59 | 同 30.py Relevance Feedback += score(word2Vec_news_d200)|
+| 33.py | none | non | none | explosion |
+

@@ -17,6 +17,7 @@ from gensim.models import Word2Vec
 from scipy.sparse import csr_matrix
 
 from bm25 import BM25Transformer
+from logger import EpochLogger
 
 queryFile = os.path.join('..', 'data', 'QS_1.csv')
 stopwordFile = os.path.join('..', 'data', "StopWord.txt")
@@ -82,12 +83,12 @@ appending title to document...
     docsTokens = [t.split() for t in token]
 
     print("loading model")
-    model = Word2Vec.load(os.path.join("..", "train", "model.w2v"))
+    model = Word2Vec.load(os.path.join("..", "train", "mix_20190625_1142.w2v"))
     print("loading model done")
 
     print("making document word vector")
 
-    docWv = np.array([np.sum(model.wv[docsTokens[i]], axis=0) \
+    docWv = np.array([np.sum(model.wv[[t for t in docsTokens[i] if t in model.wv]], axis=0) \
                         for i in tqdm(range(len(docsTokens)))])
 
     scores = np.zeros((len(queries),len(docsTokens)))
@@ -108,33 +109,10 @@ appending title to document...
             if '證所' in queries[q_id]:
                 query += ' 證交稅 證交'
 
-            qryTokenWvs = []
-            for tok in query.split():
-                try:
-                    v = model.wv.get_vector(tok)
-                except KeyError:
-                    pass
-                qryTokenWvs.append(v)
-
-            qryWv = np.sum(qryTokenWvs, axis=0)
+            qryTokens = [tok for tok in query.split() if tok in model.wv]
+            qryWv = np.sum(model.wv[qryTokens], axis=0)
 
             scores[idx] = model.wv.cosine_similarities(qryWv, docWv)
-
-
-            termWvs = [[t] for t in qryTokenWvs]
-                   # +  list(zip(qryTokens, qryTokens[1:]))
-            sim_query = ''
-            for tv in termWvs:
-                try:
-                    sim_terms = model.wv.most_similar(positive=tv, topn=10)
-                except Exception:
-                    continue # index out of range, wait to findout
-                sims = [t[0] for t in sim_terms\
-                                     if t[1] > 0.85]
-                if not sims: sims = [sim_terms[0][0]]
-                sim_query += " {}".format(' '.join(sims))
-
-            query += sim_query
 
             stages = [20, 40, 60, 80, 100]
 

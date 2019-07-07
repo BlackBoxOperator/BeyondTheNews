@@ -17,7 +17,7 @@ model = Word2Vec(tqdm(sentences, total=line_count), min_count=5, size=250, windo
 
 print("training model...")
 #model.train(tqdm(sentences), total_examples=len(sentences), epochs=150, callbacks=[EpochLogger()])
-model.train(tqdm(sentences, total=line_count), total_examples=model.corpus_count, epochs=150, callbacks=[EpochLogger()])
+model.train(tqdm(sentences, total=line_count), total_examples=model.corpus_count, epochs=100, callbacks=[EpochLogger()])
 
 print("saving model...")
 model.save("./wiki_{}.w2v".format(datetime.datetime.now().strftime("%Y%m%d_%H%M")))
