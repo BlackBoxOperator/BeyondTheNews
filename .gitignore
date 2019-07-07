@@ -23,4 +23,10 @@ Unt*.ipynb*
 current.csv
 *.npy
 *.rar
-
+NC_2.csv
+content.csv
+error_log.txt
+log.txt
+content.bak
+script/*.csv
+script/*.txt
