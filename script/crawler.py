@@ -64,7 +64,7 @@ csvr = csv.reader(ctx); next(csvr, None)
 NC = list(csvr)
 
 start = 0
-end = len(csvr)
+end = len(NC)
 
 if len(sys.argv) > 1:
     start = int(sys.argv[1])
@@ -72,9 +72,10 @@ if len(sys.argv) > 1:
 if len(sys.argv) > 2:
     end = int(sys.argv[2])
 
-NC = csvr[start:end]
+NC = NC[start:end]
 
-print("start from:", NC[0][0])
+print("start from: {} to {}".format(NC[0][0], NC[-1][0]))
+
 if input("Enter to continue else break:"):
     print("terminated"), exit(0)
 
