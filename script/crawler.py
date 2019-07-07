@@ -27,6 +27,24 @@ article_attrs = {
         'home.appledaily.com.tw': {'class': 'ncbox_cont'},
         }
 
+def download(url):
+    downcount = 0
+    while True:
+        try:
+            request = rq.get(url, timeout = 10)
+            if request.status_code != 200:
+                return None, "- status: {} -".format(request.status_code)
+        except rq.exceptions.Timeout:
+            downcount += 1
+            if downcount > 5:
+                return None, "- timeout too many times -"
+            continue
+        except Exception as e:
+            return None, "- exception: {} -".format(e)
+
+        return request.text, None
+
+
 def rename_dialog(ques, alert, default):
     print()
     name = input(ques + '?\n(enter to cont, input to rename):').strip()
@@ -103,23 +121,16 @@ with open(log_loc, mode, encoding="UTF-8") as logfile:
 
         if not start: writerow(writer, ['index', 'title', 'content'], log)
 
-        for index, url in tqdm(NC, ascii=True):
+        for index, url in tqdm(NC, ascii = True):
 
-            try:
-                request = rq.get(url)
-                html = request.text
-                if request.status_code != 200:
-                    log(index, "- status: {} -".format(request.status_code), url)
-            except Exception as e:
-                log(index, "- invalid URL -", e, url, e)
+            html, errmsg = download(url)
+            if errmsg:
+                log(index, errmsg, url)
                 writerow(writer, [index, '', ''], log)
                 continue
 
             soup = BeautifulSoup(html, "html.parser")
             title = resc(soup.title.get_text() if soup.title else '')
-
-            #if not title:
-            #    log(index, "- no title (404) -", url)
 
             if any(pay in url for pay in paynews):
                 log(index, "- skip apple -", url)
