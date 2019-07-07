@@ -28,3 +28,5 @@ content.csv
 error_log.txt
 log.txt
 content.bak
+script/*.csv
+script/*.txt

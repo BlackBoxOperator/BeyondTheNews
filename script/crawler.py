@@ -27,6 +27,18 @@ article_attrs = {
         'home.appledaily.com.tw': {'class': 'ncbox_cont'},
         }
 
+def rename_dialog(ques, alert, default):
+    print()
+    name = input(ques + '?\n(enter to cont, input to rename):').strip()
+    if name:
+        print()
+        yn = input(alert.format(name) + '?\n(enter to cont, input to break):').strip()
+        if yn:
+            print("terminated")
+            exit(0)
+        return name
+    else:
+        return default
 
 def handle_uee(filename):
     return repr(filename)[1:-1]
@@ -49,29 +61,42 @@ def article_attrs_by(url):
 ctx = open(os.path.join('..', 'data', 'NC_2.csv'), 'r')
 csvr = csv.reader(ctx); next(csvr, None)
 
-
-# assign range here, 80w
-# NC = list(csvr)[400000:] # from 40w to 80w
+NC = list(csvr)
 
 start = 0
+end = len(csvr)
 
 if len(sys.argv) > 1:
     start = int(sys.argv[1])
 
-NC = list(csvr)[start:]
+if len(sys.argv) > 2:
+    end = int(sys.argv[2])
+
+NC = csvr[start:end]
 
 print("start from:", NC[0][0])
 if input("Enter to continue else break:"):
     print("terminated"), exit(0)
 
-print("start crawling...")
+log_loc = os.path.join('..', 'data', 'log.txt')
+cont_loc = os.path.join('..', 'data', 'content.csv')
+
+log_loc = rename_dialog("save log to: {}".format(log_loc),
+                        "relocate log file to {}",
+                        log_loc)
+
+cont_loc = rename_dialog("save content to: {}".format(cont_loc),
+                         "relocate content file to {}",
+                         cont_loc)
 
 mode = 'a' if start else 'w'
 
-with open(os.path.join('..', 'data', 'log.txt'), mode, encoding="UTF-8") as logfile:
+print("start crawling...")
+
+with open(log_loc, mode, encoding="UTF-8") as logfile:
     log = lambda *ss: logfile.write(' '.join([str(s) for s in ss]) + '\n')
 
-    with open(os.path.join('..', 'data', 'content.csv'), mode, newline='', encoding="UTF-8") as csvfile:
+    with open(cont_loc, mode, newline='', encoding="UTF-8") as csvfile:
 
         writer = csv.writer(csvfile)
 
@@ -89,12 +114,12 @@ with open(os.path.join('..', 'data', 'log.txt'), mode, encoding="UTF-8") as logf
                 writerow(writer, [index, '', ''], log)
                 continue
 
-            soup = BeautifulSoup(html, "html.parser") 
+            soup = BeautifulSoup(html, "html.parser")
             title = resc(soup.title.get_text() if soup.title else '')
 
             #if not title:
             #    log(index, "- no title (404) -", url)
-                
+
             if any(pay in url for pay in paynews):
                 log(index, "- skip apple -", url)
                 writerow(writer, [index, title, ''], log)
