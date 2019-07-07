@@ -30,3 +30,5 @@ log.txt
 content.bak
 script/*.csv
 script/*.txt
+start.*
+*w.*
