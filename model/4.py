@@ -6,7 +6,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 
 
 queryFile = os.path.join('..', 'data', 'QS_1.csv')
-stopwordFile = os.path.join('..', 'data', "StopWord.txt")
+stopwordFile = os.path.join('..', 'data', "stopword.txt")
 outputFile = os.path.join('..', 'submit', 'current.csv')
 
 cut_method = jieba.cut_for_search

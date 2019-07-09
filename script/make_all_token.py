@@ -8,7 +8,7 @@ from tqdm import *
 """
 
 url2contJson = os.path.join('..', 'data', "url2content.json")
-stopwordTxt = os.path.join('..', 'data', "StopWord.txt")
+stopwordTxt = os.path.join('..', 'data', "stopword.txt")
 idx2URLCSV = os.path.join('..', 'data', 'NC_1.csv')
 tokenFile = os.path.join('..', 'tokens', 'all_token.txt')
 tokeyFile = os.path.join('..', 'tokens', 'all_tokey.txt')

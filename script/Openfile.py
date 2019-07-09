@@ -2,7 +2,7 @@ import os, json, jieba
 
 outputFile = os.path.join('..', 'data', "TextList.json")
 url2contentFile = os.path.join('..', 'data', 'url2content.join')
-stopwordFile = os.path.join('..', 'data', 'StopWord.txt')
+stopwordFile = os.path.join('..', 'data', 'stopword.txt')
 
 
 """

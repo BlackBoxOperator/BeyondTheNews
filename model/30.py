@@ -19,7 +19,7 @@ from scipy.sparse import csr_matrix
 from bm25 import BM25Transformer
 
 queryFile = os.path.join('..', 'data', 'QS_1.csv')
-stopwordFile = os.path.join('..', 'data', "StopWord.txt")
+stopwordFile = os.path.join('..', 'data', "stopword.txt")
 outputFile = os.path.join('..', 'submit', 'current.csv')
 titleJson = os.path.join('..', 'data', "title.json")
 

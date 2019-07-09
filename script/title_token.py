@@ -7,7 +7,7 @@ cut_method = jieba.cut_for_search
 queryDictFile = os.path.join('..', 'data', 'dict.txt')
 jieba.load_userdict(queryDictFile)
 
-stopwordFile = os.path.join('..', 'data', "StopWord.txt")
+stopwordFile = os.path.join('..', 'data', "stopword.txt")
 stopwords = set(open(stopwordFile, 'r').read().split())
 
 def retain_chinese(line):

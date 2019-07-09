@@ -51,7 +51,7 @@ ECFA 早收 清單 達到 預期 成效 海峽 兩岸 經濟
 油價 應該 凍漲 緩漲 贊成 支持
 反對 旺旺 中時 併購 中嘉 不 應該 不 支持 不 贊成"""
 
-stopwordFile = os.path.join('..', 'data', "StopWord.txt")
+stopwordFile = os.path.join('..', 'data', "stopword.txt")
 outputFile = os.path.join('..', 'submit', 'current.csv')
 
 cut_method = jieba.cut_for_search
