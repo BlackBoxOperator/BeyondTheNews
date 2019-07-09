@@ -4,8 +4,6 @@
 
 [Contest Link](https://aidea-web.tw/topic/b6abbf14-2d60-456c-8cbe-34fdfcd58967)
 
-please download [Processed Data](https://drive.google.com/file/d/1K4SnbYkp3dnGVqBqjZni7RFW7gN1gEeK/view) as `./data/url2content.json`
-
 ## tools
 
 #### stopwords
