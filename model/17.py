@@ -18,7 +18,7 @@ titleJson = os.path.join('..', 'data', "title.json")
 cut_method = jieba.cut_for_search
 tokenFile = os.path.join('..', 'tokens', 'search_dict_token.txt')
 tokeyFile = os.path.join('..', 'tokens', 'search_dict_tokey.txt')
-queryDictFile = os.path.join('..', 'data', 'dict_query.txt')
+queryDictFile = os.path.join('..', 'data', 'dict.txt')
 
 jieba.load_userdict(queryDictFile)
 
