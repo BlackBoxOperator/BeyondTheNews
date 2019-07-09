@@ -4,7 +4,7 @@
 - n-gram
 - 情緒辭典
 - word embedding
-   - [pre train wrod2vec model](https://drive.google.com/open?id=1brDVqxu9osM3p1vva2JpIUQ_15IvKOZy)
+   - pre train wrod2vec model
 - [同義詞搜尋系統](https://120.127.233.228/word2vec/)
 - nn
 
