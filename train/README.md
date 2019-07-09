@@ -1,5 +1,7 @@
 # pretrained models
 
+please download all pretrained model from [google drive](https://drive.google.com/drive/folders/1VX-v6g6NK50ccMDXp1h16myzSthuol3H?usp=sharing)
+
 doc2bow reference:
 - [csdn](https://blog.csdn.net/qq_16633405/article/details/80578804)
 
@@ -9,5 +11,3 @@ word2vec reference:
 - [csdn](https://blog.csdn.net/sinat_26917383/article/details/69803018#51_Bow2vec_190)
 - [zhihu](https://zhuanlan.zhihu.com/p/24961011)
 - [ithelp](khttps://ithelp.ithome.com.tw/articles/10194369)
-
-download [pretrained word2vec model](https://drive.google.com/open?id=1brDVqxu9osM3p1vva2JpIUQ_15IvKOZy) here

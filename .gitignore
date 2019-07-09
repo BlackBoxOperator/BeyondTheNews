@@ -1,4 +1,5 @@
 data/*.json
+data/*.rar
 !data/title.json
 train/*
 !train/*.py
@@ -27,8 +28,6 @@ NC_2.csv
 content.csv
 error_log.txt
 log.txt
-content.bak
 script/*.csv
 script/*.txt
-start.*
-*w.*
+data/*/*

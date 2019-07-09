@@ -3,6 +3,13 @@ import requests as rq
 from bs4 import BeautifulSoup
 from tqdm import tqdm
 
+"""
+give all idx that you want to recrawl in NC2.csv as a file
+and feed that file as parameter to the script
+
+usage: recrawl.py recrawl_index.txt
+"""
+
 resc = lambda s: s.replace("\r", '').replace("", "").replace("\n", "")
 
 nonsense = ['(中時電子報)',
@@ -79,21 +86,12 @@ def article_attrs_by(url):
     print("cannot find domain pattern in", url)
     webbrowser.open(url), exit(0)
 
+reindices = set(open(sys.argv[1], 'r').read().split())
+
 ctx = open(os.path.join('..', 'data', 'NC_2.csv'), 'r')
 csvr = csv.reader(ctx); next(csvr, None)
 
-NC = list(csvr)
-
-start = 0
-end = len(NC)
-
-if len(sys.argv) > 1:
-    start = int(sys.argv[1])
-
-if len(sys.argv) > 2:
-    end = int(sys.argv[2])
-
-NC = NC[start:end]
+NC = [r for r in csvr if r[0] in reindices]
 
 print("start from: {} to {}".format(NC[0][0], NC[-1][0]))
 
@@ -111,7 +109,7 @@ cont_loc = rename_dialog("save content to: {}".format(cont_loc),
                          "relocate content file to {}",
                          cont_loc)
 
-mode = 'a' if start else 'w'
+mode = 'w'
 
 print("start crawling...")
 
@@ -122,7 +120,7 @@ with open(log_loc, mode, encoding="UTF-8") as logfile:
 
         writer = csv.writer(csvfile)
 
-        if not start: writerow(writer, ['index', 'title', 'content'], log)
+        writerow(writer, ['index', 'title', 'content'], log)
 
         for index, url in tqdm(NC, ascii = True):
 

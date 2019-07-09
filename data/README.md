@@ -1,8 +1,13 @@
 # AIdea - BeyondTheNews - Data
 
-please download [Processed Data](https://drive.google.com/file/d/1K4SnbYkp3dnGVqBqjZni7RFW7gN1gEeK/view) as `url2content.json` here.
+please download all data from [google drive](https://drive.google.com/open?id=18dAtXYPi02UxMhyUkZoG-VafFUdyX793)
 
-other download(AllTitle.json, InvertIndex.json...) from [google drive](https://drive.google.com/drive/u/0/folders/1fxx0dVl6diJJWLIIy8Q1Fnhwq3ngOP8G?fbclid=IwAR05L-Z0ZpZnhUz9BpPKeV8k9PfeI_jok4bojcx0JdjUhtY25xG2N21o6i8)
+google drive:
+   - NC_1.rar: NC_1.csv
+   - NC_2.rar: NC_2.csv
+   - title.rar: title.json (NC_1's doc title)
+   - NC1_content.rar: url2content.json (NC_1's content)
+   - NC2_content.rar: idx2content.csv (NC_2's title and content)
 
 ## 部分新聞語料庫（NC-1）
 
