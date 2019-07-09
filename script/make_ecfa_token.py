@@ -23,7 +23,7 @@ def strQ2B(ustring):
     return ''.join(ss)
 
 url2contJson = os.path.join('..', 'data', "url2content.json")
-stopwordTxt = os.path.join('..', 'data', "StopWord.txt")
+stopwordTxt = os.path.join('..', 'data', "stopword.txt")
 idx2URLCSV = os.path.join('..', 'data', 'NC_1.csv')
 tokenFile = os.path.join('..', 'tokens', 'ecfa_token.txt')
 tokeyFile = os.path.join('..', 'tokens', 'ecfa_tokey.txt')
