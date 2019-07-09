@@ -1,6 +1,8 @@
 data/*.json
 data/*.rar
-!data/title.json
+data/*.csv
+!data/QS_1.csv
+!data/TD.csv
 train/*
 !train/*.py
 !train/*.md
