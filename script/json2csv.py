@@ -29,5 +29,5 @@ writer = csv.writer(open(sys.argv[2], 'w'))
 writerow(writer, ['url', 'content'], log)
 
 for url in cont:
-    writerow(writer, [url, cont[url]], log)
+    writerow(writer, [url, cont[url].replace("\n", '')], log)
 
