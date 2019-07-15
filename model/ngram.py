@@ -27,6 +27,12 @@ titleJson = os.path.join('..', 'data', "title.json")
 cut_method = jieba.cut_for_search
 tokenFile = os.path.join('..', 'tokens', 'search_dict_token.txt')
 tokeyFile = os.path.join('..', 'tokens', 'search_dict_tokey.txt')
+
+bitokenFile = os.path.join('..', 'tokens', 'bigram_token.txt')
+bitokeyFile = os.path.join('..', 'tokens', 'bigram_tokey.txt')
+tritokenFile = os.path.join('..', 'tokens', 'trigram_token.txt')
+tritokeyFile = os.path.join('..', 'tokens', 'trigram_tokey.txt')
+
 queryDictFile = os.path.join('..', 'data', 'dict.txt')
 
 jieba.load_userdict(queryDictFile)
@@ -47,6 +53,10 @@ if __name__ == '__main__':
     trim = lambda f: [t.strip() for t in f if t.strip()]
     token = trim(open(tokenFile).read().split('\n'))#[:5000]#[:301]
     tokey = trim(open(tokeyFile).read().split('\n'))#[:5000]#[:301]
+    bitoken = trim(open(bitokenFile).read().split('\n'))#[:5000]#[:301]
+    #bitokey = trim(open(bitokeyFile).read().split('\n'))#[:5000]#[:301]
+    tritoken = trim(open(tritokenFile).read().split('\n'))#[:5000]#[:301]
+    #tritokey = trim(open(tritokeyFile).read().split('\n'))#[:5000]#[:301]
 
     # append title to doc
     print("""
@@ -62,6 +72,13 @@ appending title to document...
                 in cut_method(title) if w not in stopwords])) * title_weight
             token[i] += title_token
             #print('+= ' + title_token)
+
+    # add n gram
+    for i, bitok in enumerate(bitoken):
+        token[i] += ' ' + bitok
+
+    for i, tritok in enumerate(tritoken):
+        token[i] += ' ' + tritok
 
     if len(token) != len(tokey):
         print('token len sould eq to tokey len')
@@ -83,7 +100,7 @@ appending title to document...
     docsTokens = [t.split() for t in token]
 
     print("loading model")
-    model = Word2Vec.load(os.path.join("..", "train", "mix_20190625_1142.w2v"))
+    model = Word2Vec.load(os.path.join("..", "train", "news_d200_e100.w2v"))
     print("loading model done")
 
     print("making document word vector")
