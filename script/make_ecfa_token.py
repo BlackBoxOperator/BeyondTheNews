@@ -22,7 +22,7 @@ def strQ2B(ustring):
         ss.append(rstring)
     return ''.join(ss)
 
-url2contJson = os.path.join('..', 'data', "url2content.json")
+url2contCSV = os.path.join('..', 'data', "url2content.csv")
 stopwordTxt = os.path.join('..', 'data', "stopword.txt")
 idx2URLCSV = os.path.join('..', 'data', 'NC_1.csv')
 tokenFile = os.path.join('..', 'tokens', 'ecfa_token.txt')
@@ -35,7 +35,7 @@ if input('save ignore as {}? enter to continue:'.format(ignoreFile)).strip(): ex
 
 print("opening file... ", end='')
 sys.stdout.flush()
-data = open(url2contJson, "r")
+data = open(url2contCSV, "r")
 stop = open(stopwordTxt,"r")
 csvfile = open(idx2URLCSV, 'r')
 print("done")
@@ -51,7 +51,8 @@ stopList = set(stop.read().split())
 
 print("loading json... ", end='')
 sys.stdout.flush()
-cont = json.load(data)
+csvr = csv.reader(data); next(csvr, None)
+cont = {row[0]: row[1] for row in csvr}
 print("done")
 
 def retain_chinese(line):

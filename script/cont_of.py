@@ -1,7 +1,7 @@
 import os, json, csv, sys
 
 NCFile = os.path.join('..', 'data', 'NC_1.csv')
-url2contentFile = os.path.join('..', 'data', 'url2content.json')
+url2contCSV = os.path.join('..', 'data', "url2content.csv")
 
 index2URL = {}
 with open(NCFile, newline='') as csvfile:
@@ -10,8 +10,9 @@ with open(NCFile, newline='') as csvfile:
 
 print("loading json... ", end='')
 sys.stdout.flush()
-with open(url2contentFile, 'r') as f:
-    data = json.load(f)
+with open(url2contCSV, 'r') as f:
+    csvr = csv.reader(data); next(csvr, None)
+    cont = {row[0]: row[1] for row in csvr}
     print('done')
     while True:
         print(data.get(index2URL[input('input index > ')], None))

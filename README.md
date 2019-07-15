@@ -37,8 +37,6 @@
 
 - `extract_domain.py`
    將 `NC_1.csv` URL 的 domain parse 出來，並 show 出 invalid URLs
-- `load_json.py`
-   載入 `url2content.json` 的資料。
 
 ## summary
 
@@ -57,7 +55,7 @@
 /appledaily/article/adcontent/20170526/37662239/
 /appledaily/article/adcontent/20170715/37715548/
 ```
-其在 url2content.json 的內容為：
+其在 url2content.\* 的內容為：
 ```
 《蘋果》論壇歡迎投稿，一經錄用將附上稿酬。若一稿多投，本社將不支付稿酬。本報有刪修權，網站刊登不另計酬；三日未見報請自行處理，不另通知。
 請寄public@appledaily.com.tw，來稿請附真實姓名、身分證字號、職業、電話、銀行帳戶和通訊地址。                                           
