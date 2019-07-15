@@ -3,11 +3,19 @@
 please download all data from [google drive](https://drive.google.com/open?id=18dAtXYPi02UxMhyUkZoG-VafFUdyX793)
 
 google drive:
+   - dicts.rar: dict.txt, simple_dict.txt, wdict.txt, simple_wdict.txt
+   - stopwrods.rar: stopword.txt, simple_stopword.txt
    - NC_1.rar: NC_1.csv
    - NC_2.rar: NC_2.csv
    - title.rar: title.json (NC_1's doc title)
    - NC1_content.rar: url2content.json (NC_1's content)
    - NC2_content.rar: idx2content.csv (NC_2's title and content)
+
+other corpus:
+  - [aclclp](http://www.aclclp.org.tw/member/corp_c.php)
+  - [iis](http://asbc.iis.sinica.edu.tw/)
+  - [icorpus](http://asbc.iis.sinica.edu.tw/)
+  - [scidm](https://scidm.nchc.org.tw/dataset/nchc_2019_te_02)
 
 ## 部分新聞語料庫（NC-1）
 

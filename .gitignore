@@ -1,6 +1,7 @@
 data/*.json
 data/*.rar
 data/*.csv
+data/*.txt
 !data/QS_1.csv
 !data/TD.csv
 train/*
