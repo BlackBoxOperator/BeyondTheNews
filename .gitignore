@@ -1,9 +1,10 @@
-data/*.json
 data/*.rar
 data/*.csv
 data/*.txt
+data/*.json
 !data/QS_1.csv
 !data/TD.csv
+data/*/*
 train/*
 !train/*.py
 !train/*.md
@@ -33,4 +34,3 @@ error_log.txt
 log.txt
 script/*.csv
 script/*.txt
-data/*/*
