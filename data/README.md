@@ -3,6 +3,8 @@
 please download all data from [google drive](https://drive.google.com/open?id=18dAtXYPi02UxMhyUkZoG-VafFUdyX793)
 
 google drive:
+   - dicts.rar: dict.txt, simple_dict.txt, wdict.txt, simple_wdict.txt
+   - stopwrods.rar: stopword.txt, simple_stopword.txt
    - NC_1.rar: NC_1.csv
    - NC_2.rar: NC_2.csv
    - title.rar: title.json (NC_1's doc title)
