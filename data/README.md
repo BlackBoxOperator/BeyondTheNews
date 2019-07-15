@@ -9,6 +9,12 @@ google drive:
    - NC1_content.rar: url2content.json (NC_1's content)
    - NC2_content.rar: idx2content.csv (NC_2's title and content)
 
+other corpus:
+  - [aclclp](http://www.aclclp.org.tw/member/corp_c.php)
+  - [iis](http://asbc.iis.sinica.edu.tw/)
+  - [icorpus](http://asbc.iis.sinica.edu.tw/)
+  - [scidm](https://scidm.nchc.org.tw/dataset/nchc_2019_te_02)
+
 ## 部分新聞語料庫（NC-1）
 
 NC_1.csv：包含 News_Index、News_URL 兩個欄位，News_Index 表示新聞編號，News_URL 是對應的新聞連結，參賽隊伍需自行下載新聞，並且只能以「新聞標題」和「新聞文字內文」作爲檢索依據。
