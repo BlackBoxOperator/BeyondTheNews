@@ -2,13 +2,13 @@ import os, sys, csv, json, re, jieba
 from pprint import pprint
 from tqdm import *
 
-url2contCSV = os.path.join('..', 'data', "simple_url2content.csv")
-stopwordTxt = os.path.join('..', 'data', "simple_stopword.txt")
-idx2URLCSV = os.path.join('..', 'data', 'simple_NC_1.csv')
-queryDictFile = os.path.join('..', 'data', 'simple_wdict.txt')
-tokenFile = os.path.join('..', 'tokens', 'simple_search_wdict_token.txt')
-tokeyFile = os.path.join('..', 'tokens', 'simple_search_wdict_tokey.txt')
-ignoreFile = os.path.join('..', 'tokens', 'simple_search_wdict_ignore.txt')
+url2contCSV = os.path.join('..', 'data', "url2content.csv")
+stopwordTxt = os.path.join('..', 'data', "stopword.txt")
+idx2URLCSV = os.path.join('..', 'data', 'NC_1.csv')
+queryDictFile = os.path.join('..', 'data', 'wdict.txt')
+tokenFile = os.path.join('..', 'tokens', 'search_wdict_token.txt')
+tokeyFile = os.path.join('..', 'tokens', 'search_wdict_tokey.txt')
+ignoreFile = os.path.join('..', 'tokens', 'search_wdict_ignore.txt')
 
 if input('save token as {}? enter to continue:'.format(tokenFile)).strip(): exit(1)
 if input('save tokey as {}? enter to continue:'.format(tokeyFile)).strip(): exit(1)
