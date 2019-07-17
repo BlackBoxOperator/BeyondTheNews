@@ -34,3 +34,4 @@ error_log.txt
 log.txt
 script/*.csv
 script/*.txt
+*.log
