@@ -18,13 +18,9 @@
 
 ## approachs
 
-#### Vector Space Model
-
-
-#### Language Model
-
-
-#### Support Vector Machine
+- Vector Space Model
+- Language Model
+- Support Vector Machine
 
 
 ## ideas
