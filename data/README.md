@@ -1,6 +1,6 @@
 # AIdea - BeyondTheNews - Data
 
-please download all data from [google drive](https://drive.google.com/open?id=18dAtXYPi02UxMhyUkZoG-VafFUdyX793)
+please download all data from [google drive](https://drive.google.com/drive/folders/1eoTSivnOCw5IJ1wQpLbqEVW1yTAzO2Wd?usp=sharing)
 
 google drive:
    - dicts.rar: dict.txt, simple_dict.txt, wdict.txt, simple_wdict.txt
